@@ -44,7 +44,7 @@ for(var i = 0; i < lat.length - 2 ; i++)
   });
 
 polyline.setMap(map);
-var moveLatLon = new kakao.maps.LatLng(lat[lat.length - 3],log[lat.length - 3]);
+var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);
 map.setCenter(moveLatLon);
 }
 
