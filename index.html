@@ -31,12 +31,7 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
     
     
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
-var position = new kakao.maps.LatLng(33.450701, 126.570667);  
-var customOverlay = new kakao.maps.CustomOverlay({
-    position: position,
-    content: content   
-});
-customOverlay.setMap(map);
+
 
 function CreateLine(a,b){
   var lat = a.split(",");
@@ -57,6 +52,14 @@ for(var i = 0; i < lat.length - 2 ; i++)
       strokeOpacity: 0.9, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
       strokeStyle: 'solid' // 선의 스타일입니다
   });
+    
+    
+var position = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);  
+var customOverlay = new kakao.maps.CustomOverlay({
+    position: position,
+    content: content   
+});
+customOverlay.setMap(map);
     
 polyline.setMap(map);
 var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);
