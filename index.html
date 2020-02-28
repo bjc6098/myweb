@@ -53,8 +53,8 @@ for(var i = 0; i < lat.length - 2 ; i++)
     
 polyline.setMap(map);
 var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);
-    
-var content = '<div class ="label"><span class="left"></span><span class="center">탐사측선</span><span class="right"></span></div>';
+var content = '<div class ="label"><span class="left"></span><span class="center">카카오!</span><span class="right"></span></div>'; 
+
 var customOverlay = new kakao.maps.CustomOverlay({
     position: moveLatLon,
     content: content   
