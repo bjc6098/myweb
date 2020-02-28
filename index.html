@@ -54,9 +54,9 @@ for(var i = 0; i < lat.length - 2 ; i++)
 polyline.setMap(map);
 var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);
 var content = '<div class ="label"><span class="left"></span><span class="center">카카오!</span><span class="right"></span></div>'; 
-
+var position = new kakao.maps.LatLng(33.450701, 126.570667);  
 var customOverlay = new kakao.maps.CustomOverlay({
-    position: moveLatLon,
+    position: position,
     content: content   
 });
 
