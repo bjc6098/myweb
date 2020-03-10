@@ -28,26 +28,18 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 11");
-var zz = "안녕";
-    
-var content3 = '<div class ="label"><span class="left"></span><span class="center">' + zz + '</span><span class="right"></span></div>'; 
-    
+alert("업데이트 15");
+   
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
     
-var position3 = new kakao.maps.LatLng(33.450701, 126.570667);  
-var customOverlay = new kakao.maps.CustomOverlay({
-    position: position3,
-    content: content3  
-    });
-    customOverlay.setMap(map);
-    
-    
-    
 function CreatePipe(a,b){
+
     var pipe = a.split(",");
     var name = b;
     var linePath2 = new Array();  
+
+    
+    var content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
     
     linePath2.push(new kakao.maps.LatLng(pipe[0], pipe[1]));
     linePath2.push(new kakao.maps.LatLng(pipe[3], pipe[4]));
@@ -62,17 +54,15 @@ var polyline2 = new kakao.maps.Polyline({
   });
 
 polyline2.setMap(map);
-/*
-var content = '<div class ="label"><span class="left"></span><span class="center">pipe[0]</span><span class="right"></span></div>'; 
 
 
-var position = new kakao.maps.LatLng(pipe[1],pipe[2]);  
+var position2 = new kakao.maps.LatLng(pipe[0],pipe[1]);  
 var customOverlay = new kakao.maps.CustomOverlay({
-    position: position,
-    content: content   
+    position: position2,
+    content: content2   
 });
 customOverlay.setMap(map);
-*/
+
 
 }
 
