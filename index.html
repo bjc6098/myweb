@@ -33,8 +33,8 @@ alert("업데이트 3");
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 
 function CreatePipe(a){
-    var pipe = a.split('"');
-    //var pipe_info = pipe.split("");
+    var pipe = a.split(",");
+    var pipe_info = pipe.split('"');
     
     //var linePath = new Array();
     
@@ -44,7 +44,7 @@ function CreatePipe(a){
     //alert(pipe[3]);
     //alert(pipe[5]);
     
-    alert(pipe[1]);
+    alert(pipe_info);
    // alert(pipe);
 }
 
