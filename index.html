@@ -23,12 +23,11 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
         level: 2 ,// 지도의 확대 레벨
         mapTypeId : 3
-
     };
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 15");
+alert("업데이트 16");
    
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
     
@@ -57,11 +56,11 @@ polyline2.setMap(map);
 
 
 var position2 = new kakao.maps.LatLng(pipe[0],pipe[1]);  
-var customOverlay = new kakao.maps.CustomOverlay({
+var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
     content: content2   
 });
-customOverlay.setMap(map);
+customOverlay2.setMap(map);
 
 
 }
