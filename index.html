@@ -32,7 +32,7 @@ alert("업데이트 17");
    
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
     
- var zz = "제발..";
+var zz = "제발..";
     
 var content3 = '<div class ="label"><span class="left"></span><span class="center">' + zz + '</span><span class="right"></span></div>';
 var position3 = new kakao.maps.LatLng(33.450701, 126.570667);  
@@ -48,9 +48,7 @@ function CreatePipe(a,b){
     var name = b;
     var linePath2 = new Array();  
     var aaa = "안녕";
-    
-    
-    
+
     linePath2.push(new kakao.maps.LatLng(pipe[0], pipe[1]));
     linePath2.push(new kakao.maps.LatLng(pipe[3], pipe[4]));
     //alert(pipe[0]);
@@ -66,14 +64,13 @@ var polyline2 = new kakao.maps.Polyline({
 polyline2.setMap(map);
 
 var content2 = '<div class ="label"><span class="left"></span><span class="center">' + aaa + '</span><span class="right"></span></div>';
-var position2 = new kakao.maps.LatLng(pipe[0],pipe[1]);  
+var position2 = new kakao.maps.LatLng(pipe[0], pipe[1]);  
 var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
     content: content2   
 });
+    
 customOverlay2.setMap(map);
-
-
 }
 
 function CreateLine(a,b){
