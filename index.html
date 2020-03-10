@@ -36,7 +36,6 @@ function CreatePipe(a){
     var linePath2 = new Array(); 
     
 
-   alert(pipe);
     
     /*
     linePath2.push(new kakao.maps.LatLng(pipe[1], pipe[2]));
@@ -70,7 +69,6 @@ function CreateLine(a,b){
   var lat = a.split(",");
   var log = b.split(",");
   var linePath = new Array();
-alert(lat);
 for(var i = 0; i < lat.length - 2 ; i++)
 {
   linePath.push(new kakao.maps.LatLng(lat[i+1], log[i+1]));
