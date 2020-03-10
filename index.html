@@ -30,7 +30,6 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 var map = new kakao.maps.Map(mapContainer, mapOption);
 alert("업데이트 5");
     
-var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 
 function CreatePipe(a){
     var pipe = a.split(",");
@@ -65,6 +64,7 @@ alert(pipe);
 }
 
 function CreateLine(a,b){
+  var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
   var lat = a.split(",");
   var log = b.split(",");
   var linePath = new Array();
