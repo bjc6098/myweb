@@ -31,13 +31,14 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
 alert("업데이트 5");
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 
-function CreatePipe(a){
+function CreatePipe(a,b){
     var pipe = a.split(",");
+    var name = b;
     var linePath2 = new Array();  
     
-    linePath2.push(new kakao.maps.LatLng(pipe[1], pipe[2]));
-    linePath2.push(new kakao.maps.LatLng(pipe[4], pipe[5]));
-    alert(pipe[1]);
+    linePath2.push(new kakao.maps.LatLng(pipe[0], pipe[1]));
+    linePath2.push(new kakao.maps.LatLng(pipe[3], pipe[4]));
+    alert(name);
 var polyline2 = new kakao.maps.Polyline({
       path: linePath2, // 선을 구성하는 좌표배열 입니다
       endArrow: false,
