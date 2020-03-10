@@ -37,7 +37,7 @@ function CreatePipe(a){
     
     linePath2.push(new kakao.maps.LatLng(pipe[1], pipe[2]));
     linePath2.push(new kakao.maps.LatLng(pipe[4], pipe[5]));
-alert(pipe[1]);
+alert(typeof pipe[1]);
 var polyline2 = new kakao.maps.Polyline({
       path: linePath2, // 선을 구성하는 좌표배열 입니다
       endArrow: false,
@@ -66,6 +66,7 @@ function CreateLine(a,b){
   var lat = a.split(",");
   var log = b.split(",");
   var linePath = new Array();
+    alert(typeof lat[1]);
 for(var i = 0; i < lat.length - 2 ; i++)
 {
   linePath.push(new kakao.maps.LatLng(lat[i+1], log[i+1]));
