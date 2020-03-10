@@ -24,19 +24,30 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         level: 2 ,// 지도의 확대 레벨
         mapTypeId : 3
     };
+    
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 16");
+alert("업데이트 17");
    
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
+    
+ var zz = "제발..";
+    
+var content3 = '<div class ="label"><span class="left"></span><span class="center">' + zz + '</span><span class="right"></span></div>';
+var position3 = new kakao.maps.LatLng(33.450701, 126.570667);  
+var customOverlay3 = new kakao.maps.CustomOverlay({
+    position: position3,
+    content: content3   
+});
+customOverlay3.setMap(map);
     
 function CreatePipe(a,b){
 
     var pipe = a.split(",");
     var name = b;
     var linePath2 = new Array();  
-var aaa = "안녕";
+    var aaa = "안녕";
     
     var content2 = '<div class ="label"><span class="left"></span><span class="center">' + aaa + '</span><span class="right"></span></div>';
     
