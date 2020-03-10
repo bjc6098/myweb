@@ -44,7 +44,7 @@ function CreatePipe(a){
     s_log *= 1;
     e_lat *= 1;
     e_log *= 1;
-    
+    alert(s_lat);
     linePath2.push(new kakao.maps.LatLng(s_lat, s_log));
     linePath2.push(new kakao.maps.LatLng(e_lat, e_log));
 
@@ -69,7 +69,7 @@ var customOverlay = new kakao.maps.CustomOverlay({
 });
 customOverlay.setMap(map);
 */
-alert(s_lat);
+
 }
 
 function CreateLine(a,b){
