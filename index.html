@@ -49,7 +49,7 @@ function CreatePipe(a,b){
     var linePath2 = new Array();  
     var aaa = "안녕";
     
-    var content2 = '<div class ="label"><span class="left"></span><span class="center">' + aaa + '</span><span class="right"></span></div>';
+    
     
     linePath2.push(new kakao.maps.LatLng(pipe[0], pipe[1]));
     linePath2.push(new kakao.maps.LatLng(pipe[3], pipe[4]));
@@ -65,7 +65,7 @@ var polyline2 = new kakao.maps.Polyline({
 
 polyline2.setMap(map);
 
-
+var content2 = '<div class ="label"><span class="left"></span><span class="center">' + aaa + '</span><span class="right"></span></div>';
 var position2 = new kakao.maps.LatLng(pipe[0],pipe[1]);  
 var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
