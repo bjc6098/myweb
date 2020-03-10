@@ -32,6 +32,11 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
     
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 
+function CreatePipe(a){
+    var pipe = a.split(",");
+    
+    alert("확인을 누를 때까지 다른 작업을 할 수 없어요!");
+}
 
 function CreateLine(a,b){
   var lat = a.split(",");
