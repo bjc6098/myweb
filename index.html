@@ -28,7 +28,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 8");
+alert("업데이트 9");
 var zz = "안녕";
     
 var content3 = '<div class ="label"><span class="left"></span><span class="center">zz</span><span class="right"></span></div>'; 
@@ -37,8 +37,8 @@ var content = '<div class ="label"><span class="left"></span><span class="center
     
 var position3 = new kakao.maps.LatLng(33.450701, 126.570667);  
 var customOverlay = new kakao.maps.CustomOverlay({
-    position3: position,
-    content3: content  
+    position: position3,
+    content: content3  
     });
     customOverlay.setMap(map);
     
