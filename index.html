@@ -34,7 +34,7 @@ var content = '<div class ="label"><span class="left"></span><span class="center
 
 function CreatePipe(a){
     var pipe = a.split(",");
-    var pipe_info = pipe.split('"');
+    var pipe_info = a.split('"');
     
     //var linePath = new Array();
     
@@ -45,7 +45,7 @@ function CreatePipe(a){
     //alert(pipe[5]);
     
     alert(pipe_info);
-   // alert(pipe);
+    alert(pipe);
 }
 
 function CreateLine(a,b){
