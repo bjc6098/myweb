@@ -28,27 +28,19 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 1");
+alert("업데이트 2");
 var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 
 function CreatePipe(a){
     var pipe = a.split(",");
     var linePath2 = new Array(); 
     
-   var s_lat = pipe[1];
-   var s_log = pipe[2];
-   var e_lat = pipe[4];
-   var e_log = pipe[5];
-    
-    s_lat *= 1;
-    s_log *= 1;
-    e_lat *= 1;
-    e_log *= 1;
-    alert(s_lat);
+
+   alert(pipe[1]);
     
     /*
-    linePath2.push(new kakao.maps.LatLng(s_lat, s_log));
-    linePath2.push(new kakao.maps.LatLng(e_lat, e_log));
+    linePath2.push(new kakao.maps.LatLng(pipe[1], pipe[2]));
+    linePath2.push(new kakao.maps.LatLng(pipe[4], pipe[5]));
 
 var polyline2 = new kakao.maps.Polyline({
       path: linePath2, // 선을 구성하는 좌표배열 입니다
