@@ -42,6 +42,8 @@ var customOverlay3 = new kakao.maps.CustomOverlay({
 });
 customOverlay3.setMap(map);
     
+    var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
+    var content2 = '<div class ="label"><span class="left"></span><span class="center">asd</span><span class="right"></span></div>';
 function CreatePipe(a,b){
 
     var pipe = a.split(",");
@@ -63,7 +65,7 @@ var polyline2 = new kakao.maps.Polyline({
 
 polyline2.setMap(map);
 
-var content2 = '<div class ="label"><span class="left"></span><span class="center">' + aaa + '</span><span class="right"></span></div>';
+content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
 var position2 = new kakao.maps.LatLng(pipe[0], pipe[1]);  
 var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
@@ -74,7 +76,6 @@ customOverlay2.setMap(map);
 }
 
 function CreateLine(a,b){
-  var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
   var lat = a.split(",");
   var log = b.split(",");
   var linePath = new Array();
