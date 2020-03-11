@@ -28,7 +28,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 10");
+alert("업데이트 11");
 
 //var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
    
@@ -69,7 +69,7 @@ function CreateLine(a,b){
   var lat = a.split(",");
   var log = b.split(",");
   var linePath = new Array();
-for(var i = 0; i < lat.length - 1 ; i++)
+for(var i = 0; i < lat.length - 2 ; i++)
 {
   linePath.push(new kakao.maps.LatLng(lat[i+1], log[i+1]));
 //linePath[i] = new kakao.maps.LatLng(lat[i+1], log[i+1]);
