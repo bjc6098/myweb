@@ -28,7 +28,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 20");
+alert("업데이트 1");
    
 
     
@@ -52,7 +52,10 @@ function CreatePipe(a,b){
 
     linePath2.push(new kakao.maps.LatLng(pipe[0], pipe[1]));
     linePath2.push(new kakao.maps.LatLng(pipe[3], pipe[4]));
-    //alert(pipe[0]);
+    alert(pipe[0]);
+    alert(pipe[1]);
+    alert(pipe[3]);
+    alert(pipe[4]);
 var polyline2 = new kakao.maps.Polyline({
       path: linePath2, // 선을 구성하는 좌표배열 입니다
       endArrow: false,
