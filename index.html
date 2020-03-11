@@ -28,7 +28,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 3");
+alert("업데이트 4");
    
 
     
@@ -43,7 +43,7 @@ var customOverlay3 = new kakao.maps.CustomOverlay({
 customOverlay3.setMap(map);
     
     var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
-    var content2 = '<div class ="label"><span class="left"></span><span class="center">asd</span><span class="right"></span></div>';
+    //var content2 = '<div class ="label"><span class="left"></span><span class="center">asd</span><span class="right"></span></div>';
 function CreatePipe(a,b){
 
     var pipe = a.split(",");
@@ -52,30 +52,28 @@ function CreatePipe(a,b){
 
     linePath2.push(new kakao.maps.LatLng(pipe[1], pipe[2]));
     linePath2.push(new kakao.maps.LatLng(pipe[4], pipe[5]));
-    alert(pipe[1]);
     //alert(pipe[1]);
-    //alert(pipe[3]);
-    //alert(pipe[4]);
+
 var polyline2 = new kakao.maps.Polyline({
       path: linePath2, // 선을 구성하는 좌표배열 입니다
       endArrow: false,
-      strokeWeight: 4, // 선의 두께 입니다
+      strokeWeight: 5, // 선의 두께 입니다
       strokeColor: '#0054FF', // 선의 색깔입니다
       strokeOpacity: 0.9, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
       strokeStyle: 'solid' // 선의 스타일입니다
   });
 
 polyline2.setMap(map);
-/*
-content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
-var position2 = new kakao.maps.LatLng(pipe[0], pipe[1]);  
+
+var content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
+var position2 = new kakao.maps.LatLng(pipe[1], pipe[2]);  
 var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
     content: content2   
 });
     
 customOverlay2.setMap(map);
-*/
+
 }
 
 function CreateLine(a,b){
