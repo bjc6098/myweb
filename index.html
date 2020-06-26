@@ -79,7 +79,7 @@ var markerP = = new kakao.maps.LatLng(33.450701, 126.570667);
 var marker2 = new kakao.maps.Marker({
     position: markerP
 });
-    
+marker2.setMap(map);
     
     
 function CreateMarker(a){
@@ -93,8 +93,8 @@ var marker = new kakao.maps.Marker({
 });
 // 마커가 지도 위에 표시되도록 설정합니다
 marker.setMap(map);
-marker2.setMap(null);
-marker2 = marker;
+//marker2.setMap(null);
+//marker2 = marker;
 //var moveLatLon2 = new kakao.maps.LatLng(pipe[1], pipe[2]);
 //map.setCenter(moveLatLon2);
 
