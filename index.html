@@ -28,7 +28,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 16");
+//alert("업데이트 16");
 
 //var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
    
@@ -75,26 +75,22 @@ map.setCenter(moveLatLon2);
     var markerPosition2  = new kakao.maps.LatLng(33.450701, 126.570667);     
     var marker2 = new kakao.maps.Marker({
     position: markerPosition2
-});
-    marker2.setMap(map);
-    
-    
-    marker2.position = new kakao.maps.LatLng(33.460701, 126.570667);     
+});  
     
 function CreateMarker(a){
+    marker2.setMap(false);
 var pipe = a.split(",");    
 var markerPosition  = new kakao.maps.LatLng(pipe[1], pipe[2]); 
 marker2.position = markerPosition;
     
-    /*
 // 마커를 생성합니다
 var marker = new kakao.maps.Marker({
     position: markerPosition
 });
-    
+    marker2 = marker;
 // 마커가 지도 위에 표시되도록 설정합니다
 marker.setMap(map);
-*/
+
 }
     
 
