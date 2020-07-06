@@ -55,15 +55,15 @@ alert("업데이트 26");
 function Hidden(){
 	polylines.setMap(false);
 	customOverlays.setMap(false);	
-	btn1.onclick="Visible()";
-	img1.src="visible.png";
+	document.getElementById("btn1").setAttribute("onClick", "Visible()");
+	document.getElementById("img1").setAttribute("src", "visible.png");
 }
 	
 function Visible(){
 	polylines.setMap(map);
 	customOverlays.setMap(map);	
-	btn1.onclick="Hidden()";
-	img1.src="hidden.png";
+	document.getElementById("btn1").setAttribute("onClick", "Hidden()");
+	document.getElementById("img1").setAttribute("src", "hidden.png");
 }
 
 function CreatePipe(a,b,c){
