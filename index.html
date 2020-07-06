@@ -9,22 +9,9 @@
 .label .left {background: url("http://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_l.png") no-repeat;display: inline-block;height: 24px;overflow: hidden;vertical-align: top;width: 7px;}
 .label .center {background: url(http://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_bg.png) repeat-x;display: inline-block;height: 24px;font-size: 12px;line-height: 24px;}
 .label .right {background: url("http://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_r.png") -1px 0  no-repeat;display: inline-block;height: 24px;overflow: hidden;width: 6px;}
-        html, body {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-		}
 </style>   
 <style>
  html, body {margin: 0;padding: 0;height: 100%;}
-	
-	input.img-button {
-        background: url( "images/button_hidden.png" ) no-repeat;
-        border: none;
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-      }
 </style>
     
 </head>
@@ -62,11 +49,8 @@ function Visible(){
 	polylines.setMap(map);
 	customOverlays.setMap(map);	
 }
-	<form>
-      <p style="float:right;">
-        <input type="button" class="img-button">
-      </p>
-    </form>
+
+	<button type="button" style ="float:left;width:50px;height:50px;" onclick='Hidden()'><img src="images/button_hidden.png"></button>
 
 function CreatePipe(a,b,c){
 
