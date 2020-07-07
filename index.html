@@ -44,7 +44,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 27");
+alert("업데이트 30");
 
 //var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 	
@@ -55,14 +55,15 @@ alert("업데이트 27");
 function Hidden(){
 	polylines.setMap(false);
 	customOverlays.setMap(false);	
-	document.getElementById("btn1").setAttribute("onclick", "Visible()");
+	//document.getElementById("btn1").setAttribute("onclick", "Visible()");
+	document.getElementById("btn1").onclick = "Visible()";
 	document.getElementById("img1").setAttribute("src", "hidden.png");
 }
 	
 function Visible(){
 	polylines.setMap(map);
 	customOverlays.setMap(map);	
-	document.getElementById("btn1").setAttribute("onclick", "Hidden()");
+	document.getElementById("btn1").onclick = "Hidden()";
 	document.getElementById("img1").setAttribute("src", "visible.png");
 }
 
