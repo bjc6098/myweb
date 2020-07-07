@@ -26,8 +26,8 @@
 <div id="map" style="width:100%;height:100%;"></div>
 	
 <div class="custom_buttons radius_border">	
-	<span id="btn1" onclick="Hidden()"><img id="img1" src="visible.png" alt="관로숨기기"></span>  
-        <span onclick="Visible()"><img src="home.png" alt="새로고침"></span>
+	<span onclick="Hidden()"><img id="img1" src="visible.png" alt="관로숨기기"></span>  
+        <span onclick="Center()"><img src="home.png" alt="새로고침"></span>
     </div>	
 </div>
 
@@ -44,40 +44,38 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 31");
+alert("업데이트 32");
 
 //var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 	
 	var polylines = new Array();
 	var customOverlays = new Array();
 	
-	
+	var flag = false;
 function Hidden(){
+	if(flag == false)
+	{
 	for(var i = 0; i < polylines.length ; i++)
 {
 	polylines[i].setMap(false);
 	customOverlays[i].setMap(false);
 }
-	//polylines.setMap(false);
-	//customOverlays.setMap(false);	
-	//document.getElementById("btn1").setAttribute("onclick", "Visible()");
-	document.getElementById("btn1").onclick = "Visible()";
 	document.getElementById("img1").setAttribute("src", "hidden.png");
-}
-	
-function Visible(){
-	
-	for(var i = 0; i < polylines.length ; i++)
+		flag = true;
+	}
+	else
+	{
+		for(var i = 0; i < polylines.length ; i++)
 {
 	polylines[i].setMap(map);
 	customOverlays[i].setMap(map);
 }
-	
-	//polylines.setMap(map);
-	//customOverlays.setMap(map);	
-	document.getElementById("btn1").onclick = "Hidden()";
 	document.getElementById("img1").setAttribute("src", "visible.png");
+		flag = false;
+		
+	}
 }
+
 
 function CreatePipe(a,b,c){
 
