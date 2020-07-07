@@ -48,21 +48,33 @@ alert("업데이트 30");
 
 //var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 	
-	var polylines;
-	var customOverlays;
+	var polylines = new Array();
+	var customOverlays = new Array();
 	
 	
 function Hidden(){
-	polylines.setMap(false);
-	customOverlays.setMap(false);	
+	for(var i = 0; i < polylines.length ; i++)
+{
+	polylines[i].setMap(false);
+	customOverlays[i].setMap(false);
+}
+	//polylines.setMap(false);
+	//customOverlays.setMap(false);	
 	//document.getElementById("btn1").setAttribute("onclick", "Visible()");
 	document.getElementById("btn1").onclick = "Visible()";
 	document.getElementById("img1").setAttribute("src", "hidden.png");
 }
 	
 function Visible(){
-	polylines.setMap(map);
-	customOverlays.setMap(map);	
+	
+	for(var i = 0; i < polylines.length ; i++)
+{
+	polylines[i].setMap(map);
+	customOverlays[i].setMap(map);
+}
+	
+	//polylines.setMap(map);
+	//customOverlays.setMap(map);	
 	document.getElementById("btn1").onclick = "Hidden()";
 	document.getElementById("img1").setAttribute("src", "visible.png");
 }
@@ -88,7 +100,8 @@ var polyline2 = new kakao.maps.Polyline({
   });
 
 polyline2.setMap(map);
-	polylines = polyline2;
+	//polylines = polyline2;
+	polylines.push(polyline2);
 
 var content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
 var position2 = new kakao.maps.LatLng(pipe[1], pipe[2]);  
@@ -98,7 +111,8 @@ var customOverlay2 = new kakao.maps.CustomOverlay({
 });
     
 customOverlay2.setMap(map);
-	customOverlays = customOverlay2;
+	//customOverlays = customOverlay2;
+	customOverlays.push(customOverlay2);
     
 var moveLatLon2 = new kakao.maps.LatLng(pipe[1], pipe[2]);
 map.setCenter(moveLatLon2);
