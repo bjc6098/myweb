@@ -44,7 +44,7 @@ var mapContainer = document.getElementById('map'),
 
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 40");
+alert("업데이트 41");
 	
 var customOverlays = new Array();	
 var polylines = new Array(); 
@@ -75,6 +75,63 @@ function Hidden(){
 	}
 }
 
+	
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var polygons = new Array();
+function CreateRoad(a,b){
+var lat = a.split(",");
+  var log = b.split(",");
+  var linePath = new Array();
+for(var i = 0; i < lat.length - 2 ; i++)
+{
+  linePath.push(new kakao.maps.LatLng(lat[i+1], log[i+1]));
+}
+	
+  var polygon = new kakao.maps.Polygon({
+      path: linePath, 
+      strokeWeight: 1, // 선의 두께 입니다
+      strokeColor: '#39DE2A', // 선의 색깔입니다
+    strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    strokeStyle: 'solid', // 선의 스타일입니다
+    fillColor: '#A2FF99', // 채우기 색깔입니다
+    fillOpacity: 0.7 // 채우기 불투명도 입니다
+});
+	
+	
+polygon.setMap(map);
+	
+var mouseoverOption = { 
+    fillColor: '#EFFFED', // 채우기 색깔입니다
+    fillOpacity: 0.8 // 채우기 불투명도 입니다        
+};
+
+var mouseoutOption = {
+    fillColor: '#A2FF99', // 채우기 색깔입니다 
+    fillOpacity: 0.7 // 채우기 불투명도 입니다        
+};
+
+// 다각형에 마우스오버 이벤트를 등록합니다
+kakao.maps.event.addListener(polygon, 'mouseover', function() { 
+
+    polygon.setOptions(mouseoverOption);
+
+});   
+
+kakao.maps.event.addListener(polygon, 'mouseout', function() { 
+
+    polygon.setOptions(mouseoutOption);
+    
+}); 
+	
+var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);
+CenterLatLon = moveLatLon;
+map.setCenter(moveLatLon);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
 function CreatePipe(a,b,c){
 
     var pipe = a.split(",");
@@ -120,6 +177,9 @@ map.setCenter(moveLatLon2);
     position: markerPosition2
 });  
     
+	
+	
+	
 function CreateMarker(a){
     marker2.setMap(false);
 var pipe = a.split(",");    
