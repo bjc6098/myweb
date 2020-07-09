@@ -87,8 +87,6 @@ var lat = a.split(",");
 for(var i = 0; i < lat.length - 2 ; i++)
 {
   linePath.push(new kakao.maps.LatLng(lat[i+1], log[i+1]));
-	alert(lat[i+1]);
-	alert(log[i+1]);
 }
 	
   var polygon = new kakao.maps.Polygon({
