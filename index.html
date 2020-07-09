@@ -118,24 +118,24 @@ for(var i = 0; i < lat.length - 2 ; i++)
   var polygon = new kakao.maps.Polygon({
       path: linePath, 
       strokeWeight: 1, // 선의 두께 입니다
-      strokeColor: '#0100FF', // 선의 색깔입니다
-    strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+      strokeColor: '#FFE400', // 선의 색깔입니다
+    strokeOpacity: 0.9, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
     strokeStyle: 'solid', // 선의 스타일입니다
-    fillColor: '#4948FF', // 채우기 색깔입니다
-    fillOpacity: 0.7 // 채우기 불투명도 입니다
+    fillColor: '#FFF612', // 채우기 색깔입니다
+    fillOpacity: 0.9 // 채우기 불투명도 입니다
 });
 	
 	
 polygon.setMap(map);
 	
 var mouseoverOption = { 
-    fillColor: '#9190FF', // 채우기 색깔입니다
-    fillOpacity: 0.8 // 채우기 불투명도 입니다        
+    fillColor: '#FFFF6C', // 채우기 색깔입니다
+    fillOpacity: 0.9 // 채우기 불투명도 입니다        
 };
 
 var mouseoutOption = {
-    fillColor: '#4948FF', // 채우기 색깔입니다 
-    fillOpacity: 0.7 // 채우기 불투명도 입니다        
+    fillColor: '#FFF612', // 채우기 색깔입니다 
+    fillOpacity: 0.9 // 채우기 불투명도 입니다        
 };
 
 // 다각형에 마우스오버 이벤트를 등록합니다
@@ -178,9 +178,9 @@ for(var i = 0; i < lat.length - 2 ; i++)
 var polyline2 = new kakao.maps.Polyline({
       path: linePath, // 선을 구성하는 좌표배열 입니다
       endArrow: false,
-      strokeWeight: 4, // 선의 두께 입니다
+      strokeWeight: 3, // 선의 두께 입니다
       strokeColor: color, // 선의 색깔입니다
-      strokeOpacity: 0.9, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+      strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
       strokeStyle: 'solid' // 선의 스타일입니다
   });
 
