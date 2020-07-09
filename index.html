@@ -76,6 +76,11 @@ function Hidden(){
 }
 
 	
+	var CenterLatLon;
+function Center(){
+map.setCenter(CenterLatLon);	
+}	
+	
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -194,33 +199,6 @@ var marker = new kakao.maps.Marker({
 
 marker.setMap(map);
 
-}
-
-var CenterLatLon;
-function Center(){
-map.setCenter(CenterLatLon);	
-}	
-function CreateLine(a,b){
-  var lat = a.split(",");
-  var log = b.split(",");
-  var linePath = new Array();
-for(var i = 0; i < lat.length - 2 ; i++)
-{
-  linePath.push(new kakao.maps.LatLng(lat[i+1], log[i+1]));
-}
-  var polyline = new kakao.maps.Polyline({
-      path: linePath, 
-      endArrow: true,
-      strokeWeight: 3, 
-      strokeColor: '#39DE2A', 
-      strokeOpacity: 0.9, 
-      strokeStyle: 'solid' 
-  });    
-	
-polyline.setMap(map);
-var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);
-CenterLatLon = moveLatLon;
-map.setCenter(moveLatLon);
 }
 
 </script>
