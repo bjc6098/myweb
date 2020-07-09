@@ -83,11 +83,31 @@ map.setCenter(CenterLatLon);
 	
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 
+	
+function Point(){
+
+	if(road_flag == true)
+	{
+		road_flag = false;
+		return roadid;
+	}
+	else
+	{
+		return "noone";
+	}
+}
+
+	
+	
+var roadid;
+var road_flag = false;
 var polygons = new Array();
-function CreateRoad(a,b){
+function CreateRoad(a,b,c){
 var lat = a.split(",");
   var log = b.split(",");
+var name = c;
   var linePath = new Array();
 for(var i = 0; i < lat.length - 2 ; i++)
 {
@@ -129,6 +149,11 @@ kakao.maps.event.addListener(polygon, 'mouseout', function() {
     polygon.setOptions(mouseoutOption);
     
 }); 
+	
+kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {  
+	roadid = name;
+	road_flag = true;
+});
 	
 var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);
 CenterLatLon = moveLatLon;
