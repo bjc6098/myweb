@@ -45,14 +45,13 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
 alert("업데이트 36");
-
-//var content = '<div class ="label"><span class="left"></span><span class="center">측선현황</span><span class="right"></span></div>'; 
 	
 	var polylines = new Array();
 	var customOverlays = new Array();
 	
 	var flag = false;
 function Hidden(){
+	
 	if(flag == false)
 	{
 	for(var i = 0; i < polylines.length ; i++)
@@ -74,7 +73,7 @@ function Hidden(){
 		flag = false;
 		
 	}
-}
+}// Hidden 함수
 
 	
 function CreateRoad(a,b){
@@ -99,13 +98,11 @@ for(var i = 0; i < lat.length - 2 ; i++)
 	
 polygon.setMap(map);
 	
-	
-	var mouseoverOption = { 
+var mouseoverOption = { 
     fillColor: '#EFFFED', // 채우기 색깔입니다
     fillOpacity: 0.8 // 채우기 불투명도 입니다        
 };
 
-// 다각형에 마우스아웃 이벤트가 발생했을 때 변경할 채우기 옵션입니다
 var mouseoutOption = {
     fillColor: '#A2FF99', // 채우기 색깔입니다 
     fillOpacity: 0.7 // 채우기 불투명도 입니다        
@@ -123,17 +120,11 @@ kakao.maps.event.addListener(polygon, 'mouseout', function() {
     polygon.setOptions(mouseoutOption);
     
 }); 
-
-kakao.maps.event.addListener(polygon, 'mousedown', function() { 
-	alert("업데이트 35");
-}); 
-	
-	
 	
 var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length/2)],log[parseInt(lat.length/2)]);
 CenterLatLon = moveLatLon;
 map.setCenter(moveLatLon);
-}
+}// CreateRoad 함수
 	
 	
 	
@@ -176,7 +167,7 @@ customOverlay2.setMap(map);
 var moveLatLon2 = new kakao.maps.LatLng(pipe[1], pipe[2]);
 map.setCenter(moveLatLon2);
 
-}
+}// CreatePipe 함수
 
     var markerPosition2  = new kakao.maps.LatLng(33.450701, 126.570667);     
     var marker2 = new kakao.maps.Marker({
@@ -197,7 +188,7 @@ var marker = new kakao.maps.Marker({
 // 마커가 지도 위에 표시되도록 설정합니다
 marker.setMap(map);
 
-}
+}// CreateMarker 함수
 	
 	
 	var Lat;
