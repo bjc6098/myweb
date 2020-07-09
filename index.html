@@ -44,7 +44,7 @@ var mapContainer = document.getElementById('map'),
 
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 41");
+alert("업데이트 42");
 	
 var customOverlays = new Array();	
 var polylines = new Array(); 
@@ -87,6 +87,8 @@ var lat = a.split(",");
 for(var i = 0; i < lat.length - 2 ; i++)
 {
   linePath.push(new kakao.maps.LatLng(lat[i+1], log[i+1]));
+	alert(lat[i+1]);
+	alert(log[i+1]);
 }
 	
   var polygon = new kakao.maps.Polygon({
