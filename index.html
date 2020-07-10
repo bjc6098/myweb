@@ -145,7 +145,7 @@ kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
 	
 	
 var content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
-var position2 = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng());  
+var position2 = new kakao.maps.LatLng(latlng.getLat()+0.00015, latlng.getLng());  
 var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
     content: content2   
