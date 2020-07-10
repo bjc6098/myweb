@@ -45,7 +45,7 @@ var mapContainer = document.getElementById('map'),
 
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 2");
+alert("업데이트 3");
 	
 var customOverlays = new Array();	
 var polylines = new Array(); 
@@ -140,10 +140,12 @@ var mouseoutOption = {
 
 	var r_name;
 // 다각형에 마우스오버 이벤트를 등록합니다
-kakao.maps.event.addListener(polygon, 'mouseover', function() {
+kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
+	var latlng = mouseEvent.latLng;
+	
 	
 var content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
-var position2 = new kakao.maps.LatLng(lat[2], log[2]);  
+var position2 = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng());  
 var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
     content: content2   
