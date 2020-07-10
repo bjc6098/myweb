@@ -45,7 +45,7 @@ var mapContainer = document.getElementById('map'),
 
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 4");
+alert("업데이트 5");
 	
 var customOverlays = new Array();	
 var polylines = new Array(); 
@@ -168,6 +168,7 @@ road_flag = false;
 }); 
 	
 kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {  
+	r_name.setMap(false);
 	roadid = name;
 	road_flag = true;
 });
