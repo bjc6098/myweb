@@ -45,7 +45,7 @@ var mapContainer = document.getElementById('map'),
 
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
-//alert("업데이트 1");
+alert("업데이트 1");
 	
 var customOverlays = new Array();	
 var polylines = new Array(); 
@@ -138,9 +138,19 @@ var mouseoutOption = {
     fillOpacity: 0.8 // 채우기 불투명도 입니다        
 };
 
+	var r_name;
 // 다각형에 마우스오버 이벤트를 등록합니다
-kakao.maps.event.addListener(polygon, 'mouseover', function() { 
-
+kakao.maps.event.addListener(polygon, 'mouseover', function() {
+var marker = [
+    {
+        position: new kakao.maps.LatLng(33.45000, 126.570467), 
+        text: name
+    }
+];
+	
+	
+	marker.setMap(map);
+	r_name = marker;
     polygon.setOptions(mouseoverOption);
 
 });   
@@ -148,6 +158,7 @@ kakao.maps.event.addListener(polygon, 'mouseover', function() {
 kakao.maps.event.addListener(polygon, 'mouseout', function() { 
 
 road_flag = false;
+	r_name.setMap(false);
     polygon.setOptions(mouseoutOption);
     
 }); 
