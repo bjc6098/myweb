@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>지도 생성하기</title>
     <style>
-.label {margin-bottom: 50px;}
+.label {margin-bottom: 5px;}
 .label * {display: inline-block;vertical-align: top;}
 .label .left {background: url("http://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_l.png") no-repeat;display: inline-block;height: 24px;overflow: hidden;vertical-align: top;width: 7px;}
 .label .center {background: url(http://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_bg.png) repeat-x;display: inline-block;height: 24px;font-size: 12px;line-height: 24px;}
@@ -45,7 +45,7 @@ var mapContainer = document.getElementById('map'),
 
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 1");
+alert("업데이트 2");
 	
 var customOverlays = new Array();	
 var polylines = new Array(); 
@@ -152,7 +152,7 @@ kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
 r_name.setMap(false);
 var latlng = mouseEvent.latLng;
 var content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
-var position2 = new kakao.maps.LatLng(latlng.getLat()+0.0001, latlng.getLng());  
+var position2 = new kakao.maps.LatLng(latlng.getLat()+0.00015, latlng.getLng());  
 var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
     content: content2   
