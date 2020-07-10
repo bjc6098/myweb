@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>지도 생성하기</title>
     <style>
-.label {margin-bottom: 60px;}
+.label {margin-bottom: 50px;}
 .label * {display: inline-block;vertical-align: top;}
 .label .left {background: url("http://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_l.png") no-repeat;display: inline-block;height: 24px;overflow: hidden;vertical-align: top;width: 7px;}
 .label .center {background: url(http://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_bg.png) repeat-x;display: inline-block;height: 24px;font-size: 12px;line-height: 24px;}
@@ -45,7 +45,7 @@ var mapContainer = document.getElementById('map'),
 
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
-alert("업데이트 5");
+alert("업데이트 1");
 	
 var customOverlays = new Array();	
 var polylines = new Array(); 
@@ -138,12 +138,19 @@ var mouseoutOption = {
     fillOpacity: 0.8 // 채우기 불투명도 입니다        
 };
 
-	var r_name;
+	
+var content3 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
+var position3 = new kakao.maps.LatLng(33.450701, 126.570667);     
+var r_name = new kakao.maps.CustomOverlay({
+    position: position3,
+    content: content3   
+});
+	
+	
 // 다각형에 마우스오버 이벤트를 등록합니다
 kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
-	var latlng = mouseEvent.latLng;
-	
-	
+r_name.setMap(false);
+var latlng = mouseEvent.latLng;
 var content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
 var position2 = new kakao.maps.LatLng(latlng.getLat()+0.0001, latlng.getLng());  
 var customOverlay2 = new kakao.maps.CustomOverlay({
