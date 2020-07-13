@@ -45,7 +45,7 @@ var mapContainer = document.getElementById('map'),
 
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
-//alert("업데이트 2");
+alert("업데이트 2");
 	
 var customOverlays = new Array();	
 var polylines = new Array(); 
@@ -209,9 +209,9 @@ var polyline2 = new kakao.maps.Polyline({
 
 polyline2.setMap(map);
 	polylines.push(polyline2);
-
+var lat2 = lat[2] + 0.000015;
 var content2 = '<div class ="label"><span class="left"></span><span class="center">' + name + '</span><span class="right"></span></div>';
-var position2 = new kakao.maps.LatLng(lat[2], log[2]);  
+var position2 = new kakao.maps.LatLng(lat2, log[2]);  
 var customOverlay2 = new kakao.maps.CustomOverlay({
     position: position2,
     content: content2   
