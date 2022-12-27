@@ -149,12 +149,17 @@
       }
     }
 
-
-    function GetMarker() {
+    function GetMousePoint() {
 
       if (marker_click == true) {
+        marker_click = false;
+        var str = 'mar_'+marker_index;
+        return str;
+      } 
+      else if (road_flag == true) {
         road_flag = false;
-        return marker_index;
+        var str = 'poi_'+click_position;
+        return str;
       } else {
         return "noone";
       }
@@ -165,6 +170,8 @@
     var marker_click = false;
     var marker_index = '';
 
+
+    var click_position;
     var roadid;
     var road_flag = false;
     //var polygons = new Array();
@@ -651,8 +658,13 @@
         }
 
         //r_name.setMap(false);
+        var latlng = mouseEvent.latLng;
+        click_position = latlng.getLat() + '_'+latlng.getLng();
+
         roadid = name;
         road_flag = true;
+
+
       });
 
       var moveLatLon = new kakao.maps.LatLng(lat[parseInt(lat.length / 2)], log[parseInt(lat.length / 2)]);
