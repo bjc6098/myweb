@@ -896,6 +896,7 @@ export function createmarker(lat,log,name) {
     });
 
     pointFeature.set('noMouse', false);
+    pointFeature.set('type', 2);
 
     if(nameflag)
     {
