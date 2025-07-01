@@ -89,7 +89,7 @@ const redCircleStyle = new ol.style.Style({
 function createCircleStyle(feature) {
   return new ol.style.Style({
     image: new ol.style.Circle({
-    radius: 6, // 원 크기
+    radius: 4, // 원 크기
      fill: new ol.style.Fill({ color: 'rgba(255, 0, 0, 1)' }),
     stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
   }),
@@ -109,7 +109,7 @@ function createCircleStyle(feature) {
 function createHoverStyle(feature) {
   return new ol.style.Style({
     image: new ol.style.Circle({
-    radius: 6, // 원 크기
+    radius: 4, // 원 크기
     fill: new ol.style.Fill({ color: 'rgba(0, 0, 255, 1)' }),
     stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
   }),
