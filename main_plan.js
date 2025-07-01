@@ -1,8 +1,8 @@
 
 'use strict';
 
-const planLayers = [];
-const planviewCount = [];
+let planLayers;
+let planviewCount;
 
 let GPSFlag = false;
 
@@ -16,6 +16,13 @@ let hoverindex = -1;
 let roadcount = 0;
 
 
+
+let PipeLayers;
+let PipeFeatures;
+let PipevectorSource;
+let TextFeatures;
+
+
 let nameflag = true;
 
 
@@ -23,6 +30,54 @@ const loadingModal = document.getElementById('loadingModal');
 let center_lat = 0;
 let center_lon = 0;
 let opacity = 1.0;
+
+
+
+
+
+const PipelineStyle = new ol.style.Style({
+    // 외곽선 (하얀색, 두껍게)
+    stroke: new ol.style.Stroke({
+    color: 'white',
+    width: 6,
+    zIndex : 11
+    })
+});
+
+const PiperedInnerLine = new ol.style.Style({
+    stroke: new ol.style.Stroke({
+    color: 'red',
+    width: 4,
+    zIndex:11
+    })
+});
+
+const PipeblueInnerLine = new ol.style.Style({
+    stroke: new ol.style.Stroke({
+    color: 'blue',
+    width: 4,
+    zIndex:11
+    })
+});
+
+
+
+function createPipetextStyle(feature) {
+    return new ol.style.Style({
+    text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        offsetY: -20, // 위로 15px 띄움
+        textAlign: 'center',
+        zIndex:11,
+        textBaseline: 'bottom' // 기준점을 아래쪽으로 해서 위로 띄움
+    })
+    });
+}
+
 
 
 
@@ -125,22 +180,34 @@ const markerimg = new ol.style.Icon({
 
 export function setroadcount(count) {
 
-    console.log('setroadcount');
-
     roadcount = count*1;
     markerPointLayers = new Array(roadcount);
     markerPointFeatures = new Array(roadcount);
+
+
+    PipeLayers = new Array(roadcount);
+    PipeFeatures = new Array(roadcount);
+    PipevectorSource = new Array(roadcount);
+    TextFeatures = new Array(roadcount);
 
     for(let i = 0;i < roadcount;i++)
     {
         markerPointLayers[i] = [];
         markerPointFeatures[i] = [];
+
+        PipeLayers[i] = [];
+        PipeFeatures[i] = [];
+        PipevectorSource[i] = [];
+        TextFeatures[i] = [];
     }
 }
 
 
 
 
+
+let selectpipeindex1 = -1;
+let selectpipeindex2 = -1;
 
 map.on('pointermove', function (evt) {
 
@@ -155,8 +222,7 @@ map.on('pointermove', function (evt) {
         // ✅ 여기에 마우스 오버 처리
         if (feature !== hoveredFeature) {
             if(hoveredFeaturekind == 1){
-                //hoveredFeature.setStyle(defaultStyle);
-                //map.removeLayer(arrowLayers[hoverindex]);
+
             }
             else if(hoveredFeaturekind == 2)
             {
@@ -171,7 +237,13 @@ map.on('pointermove', function (evt) {
             }
             else if(hoveredFeaturekind == 3)
             {
-
+                hoveredFeature.setStyle(function () { return [PipelineStyle, PiperedInnerLine]; });
+                if(!nameflag)
+                {
+                PipevectorSource[selectpipeindex1][selectpipeindex2].removeFeature(TextFeatures[selectpipeindex1][selectpipeindex2]);
+                selectpipeindex1 = -1;
+                selectpipeindex2 = -1;
+                }
             }
 
             hoveredFeaturekind = 0;
@@ -185,16 +257,7 @@ map.on('pointermove', function (evt) {
 
             if (feature.get('type') == 1) // 측선
             {
-                if(hoveredFeaturekind != 1)
-                {
-                    const index = roadfeatures.indexOf(feature);
-                    hoverindex = index;
-                    // feature.setStyle(hoverStyle);
-                    hoveredFeature = feature;
-                    // map.addLayer(arrowLayers[index]);
-                    // console.log(index);
-                    hoveredFeaturekind = 1;
-                }
+
             }
             else if (feature.get('type') == 2) // 마커
             {
@@ -207,7 +270,28 @@ map.on('pointermove', function (evt) {
             }
             else if (feature.get('type') == 3) // 관로
             {
-                
+                if(hoveredFeaturekind != 3)
+                {
+                    if(!nameflag)
+                    {
+                        for(let i = 0 ; i < PipeFeatures.length;i++)
+                        {
+                            const index = PipeFeatures[i].indexOf(feature);
+                            if(index != -1)
+                            {
+                                selectpipeindex1 = i;
+                                selectpipeindex2 = index;
+                                break;
+                            }
+                        }
+
+                        PipevectorSource[selectpipeindex1][selectpipeindex2].addFeature(TextFeatures[selectpipeindex1][selectpipeindex2]);
+                    }
+
+                    feature.setStyle(function () { return [PipelineStyle, PipeblueInnerLine]; });
+                    hoveredFeature = feature;
+                    hoveredFeaturekind = 3;
+                }
             }
 
             
@@ -273,11 +357,20 @@ nameButton.addEventListener('click', function(e) {
 
         for(let i = 0 ; i < markerPointFeatures.length;i++)
         {
-            for(let j = 0 ; j < markerPointFeatures.length;j++)
+            for(let j = 0 ; j < markerPointFeatures[i].length;j++)
             {
                 markerPointFeatures[i][j].setStyle(redCircleStyle);
             }
         }
+
+        for(let i = 0 ; i < PipeLayers.length;i++)
+        {
+            for(let j = 0 ; j < PipeLayers[i].length;j++)
+            {
+                PipevectorSource[i][j].removeFeature(TextFeatures[i][j]);
+            }
+        }
+
 
         nameButtonimg.src = './image/name2.png';
     }
@@ -287,9 +380,17 @@ nameButton.addEventListener('click', function(e) {
 
         for(let i = 0 ; i < markerPointFeatures.length;i++)
         {
-            for(let j = 0 ; j < markerPointFeatures.length;j++)
+            for(let j = 0 ; j < markerPointFeatures[i].length;j++)
             {
                 markerPointFeatures[i][j].setStyle(createCircleStyle( markerPointFeatures[i][j]));
+            }
+        }
+
+        for(let i = 0 ; i < PipeLayers.length;i++)
+        {
+            for(let j = 0 ; j < PipeLayers[i].length;j++)
+            {
+                PipevectorSource[i][j].addFeature(TextFeatures[i][j]);
             }
         }
 
@@ -394,18 +495,16 @@ export function addplanview_ani(image,minLat,minLon,maxLat,maxLon,index) {
 
 export function setplanviewCount(count, count2) {
 
-    planLayers.length = 0;
-
+    //planLayers.length = 0;
     const vv = count*1;
 
+    planviewCount = new Array(vv);
+    planLayers = new Array(vv);
 
     for(let i = 0 ; i < vv;i++)
     {
-        const value = count2[i]*1;
-        planviewCount.push(value);
-
-        const imgs = [];
-        planLayers.push(imgs);
+        planviewCount[i] = count2[i]*1;
+        planLayers[i] = [];
     }
 }
 
@@ -603,19 +702,12 @@ export function anistart(value) {
     console.log('anistart');
 }
 
-
-
-
-
-
-
 function setMapView(type) {
   // 기존 base layer 제거
   map.getLayers().setAt(0,
     type === 'satellite' ? satelliteLayer : normalLayer
   );
 }
-
 
 const toggle = document.getElementById('viewToggle');
     const buttons = toggle.querySelectorAll('.toggle-button');
@@ -645,12 +737,6 @@ const toggle = document.getElementById('viewToggle');
     });
     });
 
-
-
-
-
-
-    
 window.moveview = moveview;
 window.addplanview = addplanview;
 window.clearplanview = clearplanview;
@@ -659,8 +745,132 @@ window.SetOpacity = SetOpacity;
 window.Removeplanview = Removeplanview;
 window.anistart = anistart;
 
-
 window.setmarker = setmarker;
 window.checkmarker = checkmarker;
 window.removemarker = removemarker;
 window.setroadcount = setroadcount;
+
+
+
+
+
+
+
+
+
+
+
+
+
+export function Removepipe(index) {
+
+    index = index*1;
+
+    for(let i = 0 ; i < PipeLayers[index].length;i++)
+    {
+        map.removeLayer(PipeLayers[index][i]);
+    }
+
+    PipeLayers[index].length = 0;
+    PipeFeatures[index].length = 0;
+    PipevectorSource[index].length = 0;
+    TextFeatures[index].length = 0;
+}
+
+
+export function addpipe(index,lats,logs,name) {
+    
+    
+
+    index = index*1;
+    const coordinates = [];
+
+    for(let i = 0 ; i < lats.length;i++)
+    {
+        const lat = lats[i]*1.0;
+        const log = logs[i]*1.0;
+
+        coordinates.push(ol.proj.transform([log,lat], 'EPSG:4326','EPSG:3857'));
+    }
+
+    const line = new ol.geom.LineString(coordinates);
+
+    const lineFeature = new ol.Feature({
+    geometry: line
+    });
+
+    lineFeature.set('noMouse', false);
+    lineFeature.set('type', 3);
+    lineFeature.set('name', name);
+
+    PipeFeatures[index].push(lineFeature);
+
+
+     // 텍스트
+    const lineCenter = line.getCoordinateAt(0.5);
+
+    const textFeature = new ol.Feature({
+    geometry: new ol.geom.Point(lineCenter),
+    name:name
+    });
+
+    textFeature.setStyle(createPipetextStyle(textFeature));
+    TextFeatures[index].push(textFeature);
+
+    // 벡터 소스 및 레이어
+    const vectorSource = new ol.source.Vector({
+    features: [lineFeature]
+    });
+
+    PipevectorSource[index].push(vectorSource);
+
+    if(nameflag)
+    {
+        vectorSource.addFeature(textFeature);
+    }
+    
+
+    const vectorLayer = new ol.layer.Vector({
+    source: vectorSource,
+    zIndex:10,
+    style: function () {
+    // 외곽선 → 안쪽 순서로 그리기
+    return [PipelineStyle, PiperedInnerLine];
+    }
+    });
+
+    PipeLayers[index].push(vectorLayer);
+
+
+    console.log('addpipe');
+    console.log(PipeLayers[index]);
+
+}
+
+
+export function checkpipe(index,flag) {
+    console.log(index)
+    console.log(flag)
+    console.log(PipeLayers[index])
+    if(flag == 0)
+    {
+        index = index*1;
+        for(let i = 0 ; i < PipeLayers[index].length;i++)
+        {
+            map.removeLayer(PipeLayers[index][i]);
+        }
+    }
+    else
+    {
+        index = index*1;
+        for(let i = 0 ; i < PipeLayers[index].length;i++)
+        {
+            map.addLayer(PipeLayers[index][i]);
+        }
+    }
+}
+
+
+window.Removepipe = Removepipe;
+window.addpipe = addpipe;
+window.checkpipe = checkpipe;
