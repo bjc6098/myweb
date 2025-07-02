@@ -171,13 +171,6 @@ const markerimg = new ol.style.Icon({
     scale: 0.06 // 크기 조정
 })
 
-
-
-
-
-
-
-
 export function setroadcount(count) {
 
     roadcount = count*1;

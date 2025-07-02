@@ -179,6 +179,7 @@ export function moveview(lat,log) {
     SetViewCenter();
 }
 
+
 homeButton.addEventListener('click', function(e) {
     SetViewCenter();
 });
@@ -385,19 +386,16 @@ map.on('dblclick', function (event) {
 
 
 let transformedCoords_list;
+let arrowCoords_list;
 
 
 export function setroads(lat,log,color) {
-
 
     if(roadLayers != null)
     {
         map.removeLayer(roadLayers);
         map.removeLayer(arrowLayers);
     }
-
-    console.log('setroads')
-
 
     const lats = [];
     const logs = [];
@@ -409,6 +407,7 @@ export function setroads(lat,log,color) {
         lats.push(lat2);
         logs.push(log2);
     }
+
 
     const coords = lats.map((lat, i) => [logs[i], lat]);
     transformedCoords_list = coords.map(coord => ol.proj.fromLonLat(coord));
@@ -442,7 +441,6 @@ export function setroads(lat,log,color) {
 
     roadLayers = vectorLayer;
 
-
     {
         //화살표 테스트
         // 화살표 길이 설정 (EPSG:3857 기준 약간 짧게)
@@ -470,10 +468,19 @@ export function setroads(lat,log,color) {
             clogs.push(clog);
         }
 
-        const arrow_coords = clats.map((lat3, i) => [clogs[i], lat3]);
-        const arrow_transformedCoords = arrow_coords.map(arrow_coords => ol.proj.fromLonLat(arrow_coords));
+        center_lat = clats[clats.length/2]*1.0;
+        center_lon = clogs[clogs.length/2]*1.0;
 
-        for (let i = 20; i < arrow_transformedCoords.length - 20; i+= 150) {
+        const arrow_coords = clats.map((lat3, i) => [clogs[i], lat3]);
+        arrowCoords_list = clats.map((lat3, i) => [clogs[i], lat3]);
+
+        const line = new ol.geom.LineString(arrow_coords);
+        const linelength = ol.sphere.getLength(line, {projection: 'EPSG:4326'});
+        const arrow_transformedCoords = arrow_coords.map(arrow_coords => ol.proj.fromLonLat(arrow_coords));
+        const unit = Math.floor(5/ (linelength / arrow_transformedCoords.length));
+        const start = Math.floor(2/ (linelength / arrow_transformedCoords.length));
+
+        for (let i = start; i < arrow_transformedCoords.length - 20; i+= unit) {
             const start = arrow_transformedCoords[i];
             const end = arrow_transformedCoords[i + 1];
 
@@ -535,8 +542,6 @@ export function setroads(lat,log,color) {
 
 export function setarearoads(starttrace,endtrace) {
 
-    console.log('setarearoads : ' + starttrace + " , " + endtrace);
-
     if(arearoadLayers != null)
     {
         map.removeLayer(arearoadLayers);
@@ -591,6 +596,8 @@ export function setarearoads(starttrace,endtrace) {
     arearoadLayers = vectorLayer;
 
     map.addLayer(arearoadLayers);
+    const center = ol.proj.transform(arrowCoords_list[Math.floor(starttrace+(endtrace-starttrace)/2)], 'EPSG:4326','EPSG:3857');
+    map.getView().setCenter(center); // 지도 시점 변경
 }
 
 

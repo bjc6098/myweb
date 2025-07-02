@@ -28,6 +28,9 @@ let hoveredFeature = null;
 let hoveredFeaturekind = 0;
 let hoverindex = -1;
 
+let center_lats;
+let center_lons;
+
 
 
 
@@ -128,6 +131,33 @@ export function moveview(lat,log) {
 }
 
 homeButton.addEventListener('click', function(e) {
+
+    center_lat = 0;
+    center_lon = 0;
+    let count = 0;
+
+    for(let i = 0 ; i < center_lats.length;i++)
+    {
+        if(center_lats[i] != -1)
+        {
+            center_lat += center_lats[i];
+            center_lon += center_lons[i];
+            count += 1.0;
+
+            console.log(center_lats[i] + " / " + center_lons[i])
+        }
+    }
+
+    if(count == 0)
+    {
+        return;
+    }
+
+    center_lat /= count;
+    center_lon /= count;
+
+    console.log(center_lat + " / " + center_lon)
+
     SetViewCenter();
 });
 
@@ -190,12 +220,17 @@ function SetViewCenter()
 
 export function Removeroad(index)
 {
+    index = index*1;
+
     map.removeLayer(roadLayers[index]);
     roadLayers[index] = null;
-    roadfeatures[ind] = null;
+    roadfeatures[index] = null;
 
     map.removeLayer(arrowLayers[index]);
     arrowLayers[index] = null;
+
+    center_lats[index] = -1;
+    center_lons[index] = -1;
 }
 
 function sendMessageToCSharp(value) {
@@ -266,9 +301,15 @@ export function setroadcount(count) {
     PipevectorSource = new Array(roadcount);
     TextFeatures = new Array(roadcount);
 
+    center_lats = new Array(roadcount);
+    center_lons = new Array(roadcount);
+
+
 
     for(let i = 0;i < roadcount;i++)
     {
+        center_lats[i] = -1;
+        center_lons[i] = -1;
         markerPointLayers[i] = [];
         markerPointFeatures[i] = [];
 
@@ -440,7 +481,6 @@ export function setroads(index,lat,log,color,name) {
 
     const ind = index*1;
 
-
     const lats = [];
     const logs = [];
 
@@ -481,13 +521,8 @@ export function setroads(index,lat,log,color,name) {
         source: vectorSource
     });
 
-   
     roadfeatures[ind] = polygonFeature;
     roadLayers[ind] = vectorLayer;
-
-
-
-
 
     {
         //화살표 테스트
@@ -516,10 +551,17 @@ export function setroads(index,lat,log,color,name) {
             clogs.push(clog);
         }
 
-        const arrow_coords = clats.map((lat3, i) => [clogs[i], lat3]);
-        const arrow_transformedCoords = arrow_coords.map(arrow_coords => ol.proj.fromLonLat(arrow_coords));
+        center_lats[ind] = clats[Math.floor(clats.length/2)]*1.0;
+        center_lons[ind] = clogs[Math.floor(clogs.length/2)]*1.0;
 
-        for (let i = 40; i < arrow_transformedCoords.length - 40; i+= 150) {
+        const arrow_coords = clats.map((lat3, i) => [clogs[i], lat3]);
+        const line = new ol.geom.LineString(arrow_coords);
+        const linelength = ol.sphere.getLength(line, {projection: 'EPSG:4326'});
+        const arrow_transformedCoords = arrow_coords.map(arrow_coords => ol.proj.fromLonLat(arrow_coords));
+        const unit = Math.floor(5/ (linelength / arrow_transformedCoords.length));
+        const start = Math.floor(2/ (linelength / arrow_transformedCoords.length));
+
+        for (let i = start; i < arrow_transformedCoords.length - 20; i+= unit) {
             const start = arrow_transformedCoords[i];
             const end = arrow_transformedCoords[i + 1];
 
@@ -578,6 +620,20 @@ export function setroads(index,lat,log,color,name) {
         console.log(arrowLayers[ind]);
     }
 }
+
+
+
+export function selectroad(index) {
+
+    index = index*1;
+
+    if(center_lats[index] != -1)
+    {
+        const center = ol.proj.transform([center_lons[index],center_lats[index]], 'EPSG:4326','EPSG:3857');
+        map.getView().setCenter(center); // 지도 시점 변경
+    }
+}
+
 
 
 
@@ -841,9 +897,12 @@ export function removemarker(index) {
 
 
 
+
 window.setroadcount = setroadcount;
 window.setroads = setroads;
 window.checkroad = checkroad;
+window.selectroad = selectroad;
+
 window.checkmarker = checkmarker;
 
 window.removemarker = removemarker;
@@ -918,6 +977,7 @@ window.addEventListener('keydown', (event) => {
     // ENTER
     if (keycode == 13) {
         DrawGPS.finishDrawing();
+        modeText.style.display = 'none';
     }
 
     // ESC
