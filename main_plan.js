@@ -128,21 +128,24 @@ function createHoverStyle(feature) {
 
 
 
+
 const normalLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
         projection : 'EPSG:3857',
         //url : 'https://map.pstatic.net/nrb/styles/basic/1750413718/{z}/{x}/{y}.png?mt=bg.oh',
-        url : 'http://xdworld.vworld.kr:8080/2d/Base/service/{z}/{x}/{y}.png',
+        //url : 'http://xdworld.vworld.kr:8080/2d/Base/service/{z}/{x}/{y}.png',\
+        url : 'https://cdn.vworld.kr/2d/vector/Base/service/{z}/{x}/{y}.png',
         crossOrigin: 'anonymous'
     }),
-    id: 'vworld_satellite',
+    id: 'vworld_Base',
     visible: true
 })
 
 const satelliteLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
         projection : 'EPSG:3857',
-        url : 'https://xdworld.vworld.kr/2d/Satellite/service/{z}/{x}/{y}.jpeg',
+        //url : 'https://xdworld.vworld.kr/2d/Satellite/service/{z}/{x}/{y}.jpeg',
+        url : 'https://cdn.vworld.kr/2d/Satellite/service/{z}/{x}/{y}.jpeg',
         crossOrigin: 'anonymous'
     }),
     id: 'vworld_satellite',
