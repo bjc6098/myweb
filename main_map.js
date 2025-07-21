@@ -224,6 +224,8 @@ nameButton.addEventListener('click', function(e) {
 
 function SetViewCenter()
 {
+    console.log(center_lon);
+    console.log(center_lat);
     const center = ol.proj.transform([center_lon,center_lat], 'EPSG:4326','EPSG:3857');
     map.getView().setCenter(center); // 지도 시점 변경
     //map.getView().setZoom(18); // 줌 레벨 설
@@ -468,8 +470,8 @@ export function setroads(lat,log,color) {
             clogs.push(clog);
         }
 
-        center_lat = clats[clats.length/2]*1.0;
-        center_lon = clogs[clogs.length/2]*1.0;
+        center_lat = clats[ Math.floor(clats.length/2)]*1.0;
+        center_lon = clogs[ Math.floor(clogs.length/2)]*1.0;
 
         const arrow_coords = clats.map((lat3, i) => [clogs[i], lat3]);
         arrowCoords_list = clats.map((lat3, i) => [clogs[i], lat3]);
