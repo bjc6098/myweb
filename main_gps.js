@@ -17,6 +17,8 @@ let PipeFeatures;
 let PipevectorSource;
 let TextFeatures;
 
+let arrowFeaturesList;
+
 
 let nameflag = true;
 
@@ -304,7 +306,7 @@ export function setroadcount(count) {
     center_lats = new Array(roadcount);
     center_lons = new Array(roadcount);
 
-
+    arrowFeaturesList = new Array(roadcount);
 
     for(let i = 0;i < roadcount;i++)
     {
@@ -317,15 +319,16 @@ export function setroadcount(count) {
         PipeFeatures[i] = [];
         PipevectorSource[i] = [];
         TextFeatures[i] = [];
+        arrowFeaturesList[i] = [];
     }
 }
 
-const defaultStyle = new ol.style.Style({
+let defaultStyle = new ol.style.Style({
     fill: new ol.style.Fill({ color: 'rgba(179, 249, 179, 0.53)' }),
     stroke: new ol.style.Stroke({ color: 'green', width: 1 }),
 });
 
-const hoverStyle = new ol.style.Style({
+let hoverStyle = new ol.style.Style({
     fill: new ol.style.Fill({ color: 'rgba(160, 244, 209, 0.46)' }),
   stroke: new ol.style.Stroke({ color: 'red', width: 2 }), // 두껍고 빨간 외곽선
 });
@@ -477,9 +480,29 @@ map.on('singleclick', function (evt) {
 
 
 
-export function setroads(index,lat,log,color,name) {
+let color_road;
+let color_outline;
+let color_arrow;
+
+export function setroads(index,lat,log,color,color2,color3,name) {
+
+    color_road = color;
+    color_outline = color2;
+    color_arrow = color3;
+
+    defaultStyle = new ol.style.Style({
+        fill: new ol.style.Fill({ color: color_road }),
+        stroke: new ol.style.Stroke({ color: color_outline, width: 1 }),
+    });
 
     const ind = index*1;
+
+    
+    if(roadLayers[ind] != null)
+    {
+        map.removeLayer(roadLayers[ind]);
+        map.removeLayer(arrowLayers[ind]);
+    }
 
     const lats = [];
     const logs = [];
@@ -501,15 +524,7 @@ export function setroads(index,lat,log,color,name) {
         name: name,
     });
 
-    polygonFeature.setStyle(
-        new ol.style.Style({
-            //fill: new ol.style.Fill({ color: color }),
-            //stroke: new ol.style.Stroke({ color: '#0088ff', width: 2 }),
-            fill: new ol.style.Fill({ color: 'rgba(179, 249, 179, 0.53)' }),
-            stroke: new ol.style.Stroke({ color: 'green', width: 1 }),
-        })
-    );
-
+    polygonFeature.setStyle(defaultStyle);
     polygonFeature.set('noMouse', false);
     polygonFeature.set('type', 1);
 
@@ -533,10 +548,10 @@ export function setroads(index,lat,log,color,name) {
 
         const blackstyle = new ol.style.Style({
                 stroke: new ol.style.Stroke({
-                    color: 'black',
+                    color: color_arrow,
                     width: 1.5
                 })
-                });
+            });
 
         const arrowFeatures = [];
         const clats = [];
@@ -608,6 +623,8 @@ export function setroads(index,lat,log,color,name) {
             arrowFeatures[i].set('noMouse', true);
         }
 
+        arrowFeaturesList[ind] = arrowFeatures;
+
         const arrow_vectorSource = new ol.source.Vector({
         features: [...arrowFeatures]
         });
@@ -617,7 +634,7 @@ export function setroads(index,lat,log,color,name) {
             interactive: false
         });
 
-        console.log(arrowLayers[ind]);
+        //console.log(arrowLayers[ind]);
     }
 }
 
@@ -634,6 +651,46 @@ export function selectroad(index) {
     }
 }
 
+
+
+export function SetColor(color1,color2,color3) {
+
+    color_road = color1;
+    color_outline = color2;
+    color_arrow = color3;
+
+    defaultStyle = new ol.style.Style({
+        fill: new ol.style.Fill({ color: color_road }),
+        stroke: new ol.style.Stroke({ color: color_outline, width: 1 }),
+    });
+
+    for(let i = 0; i < roadfeatures.length;i++)
+    {
+        if(roadfeatures[i] != null)
+        {
+            roadfeatures[i].setStyle(defaultStyle);
+        }
+    }
+
+    const blackstyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: color_arrow,
+            width: 1.5
+        })
+    });
+
+    for(let i = 0; i < arrowFeaturesList.length;i++)
+    {
+        if(arrowFeaturesList[i].length != 0)
+        {
+            for(let j = 0; j < arrowFeaturesList[i].length;j++)
+            {
+                arrowFeaturesList[i][j].setStyle(blackstyle);
+            }
+        }
+    }
+
+}
 
 
 
@@ -915,7 +972,7 @@ window.setmarker = setmarker;
 window.Removepipe = Removepipe;
 window.addpipe = addpipe;
 window.checkpipe = checkpipe;
-
+window.SetColor = SetColor;
 
 
 // GPS 클릭 기능들

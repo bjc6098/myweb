@@ -255,12 +255,12 @@ function sendMessageToCSharp(value) {
 
 
 // 측선영역
-const defaultStyle = new ol.style.Style({
+let defaultStyle = new ol.style.Style({
     fill: new ol.style.Fill({ color: 'rgba(179, 249, 179, 0.53)' }),
     stroke: new ol.style.Stroke({ color: 'green', width: 1 }),
 });
 
-const hoverStyle = new ol.style.Style({
+let hoverStyle = new ol.style.Style({
     fill: new ol.style.Fill({ color: 'rgba(160, 244, 209, 0.46)' }),
   stroke: new ol.style.Stroke({ color: 'red', width: 2 }), // 두껍고 빨간 외곽선
 });
@@ -391,13 +391,29 @@ let transformedCoords_list;
 let arrowCoords_list;
 
 
-export function setroads(lat,log,color) {
+let color_road;
+let color_outline;
+let color_arrow;
+
+let arrowFeaturess = [];
+
+export function setroads(lat,log,color,color2,color3) {
 
     if(roadLayers != null)
     {
         map.removeLayer(roadLayers);
         map.removeLayer(arrowLayers);
+        arrowFeaturess.length = 0;
     }
+
+    color_road = color;
+    color_outline = color2;
+    color_arrow = color3;
+
+    defaultStyle = new ol.style.Style({
+    fill: new ol.style.Fill({ color: color_road }),
+    stroke: new ol.style.Stroke({ color: color_outline, width: 1 }),
+    });
 
     const lats = [];
     const logs = [];
@@ -426,8 +442,10 @@ export function setroads(lat,log,color) {
         new ol.style.Style({
             //fill: new ol.style.Fill({ color: color }),
             //stroke: new ol.style.Stroke({ color: '#0088ff', width: 2 }),
-            fill: new ol.style.Fill({ color: 'rgba(179, 249, 179, 0.53)' }),
-            stroke: new ol.style.Stroke({ color: 'green', width: 1 }),
+            // fill: new ol.style.Fill({ color: 'rgba(179, 249, 179, 0.53)' }),
+            // stroke: new ol.style.Stroke({ color: 'green', width: 1 }),
+            fill: new ol.style.Fill({ color: color_road }),
+            stroke: new ol.style.Stroke({ color: color_outline, width: 1 }),
         })
     );
 
@@ -452,7 +470,8 @@ export function setroads(lat,log,color) {
 
         const blackstyle = new ol.style.Style({
                 stroke: new ol.style.Stroke({
-                    color: 'black',
+                    // color: 'black',
+                    color: color_arrow,
                     width: 1.5
                 })
                 });
@@ -523,6 +542,8 @@ export function setroads(lat,log,color) {
                 arrowFeatures.push(f);
             }
         }
+
+        arrowFeaturess = arrowFeatures;
 
         for (let i = 0; i < arrowFeatures.length; i++)
         {
@@ -948,9 +969,33 @@ export function removeroad() {
         arearoadfeatures = null;
         arearoadLayers = null;
     }
-
 }
 
+export function SetColor(color1, color2, color3) {
+    
+    color_road = color1;
+    color_outline = color2;
+    color_arrow = color3;
+
+    defaultStyle = new ol.style.Style({
+        fill: new ol.style.Fill({ color: color_road }),
+        stroke: new ol.style.Stroke({ color: color_outline, width: 1 }),
+    });
+
+    roadfeatures.setStyle(defaultStyle);
+
+    const blackstyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: color_arrow,
+            width: 1.5
+        })
+    });
+
+    for(let i = 0; i < arrowFeaturess.length;i++)
+    {
+        arrowFeaturess[i].setStyle(blackstyle);
+    }
+}
 
 
 window.setroads = setroads;
@@ -973,6 +1018,7 @@ window.addpipe = addpipe;
 window.checkpipe = checkpipe;
 window.clearpipe = clearpipe;
 window.Editpipe = Editpipe;
+window.SetColor = SetColor;
 
 
 function setMapView(type) {
