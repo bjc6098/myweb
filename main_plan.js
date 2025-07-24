@@ -863,7 +863,17 @@ export function checkpipe(index,flag) {
     }
 }
 
+const depthtext = document.getElementById('depthtext');
+
+export function SetDepth(depth) {
+
+    depth = depth*1.0;
+    depthtext.innerText = depth.toFixed(2) + 'm';
+
+}
+
 
 window.Removepipe = Removepipe;
 window.addpipe = addpipe;
 window.checkpipe = checkpipe;
+window.SetDepth = SetDepth;
