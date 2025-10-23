@@ -33,6 +33,290 @@ let hoverindex = -1;
 let center_lats;
 let center_lons;
 
+let color_marker = '#ff0000ff';
+let color_marker_outline = '#ffffffff';
+
+let markerkind = 0;
+
+
+
+
+
+
+function NoTextMarkerStyle1() {
+    return new ol.style.Style({
+    image: new ol.style.Circle({
+    radius: 5, // 원 크기
+        fill: new ol.style.Fill({ color: color_marker }),
+    stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 }) // 테두리 흰색
+    })
+    });
+}
+
+function NoTextMarkerStyle2() {
+    return new ol.style.Style({
+    image: new ol.style.RegularShape({
+    radius: 5, // 원 크기
+        points: 4,             // 4개 → 사각형
+        radius: 7,
+        angle: Math.PI / 4,    // 회전 보정 (정사각형으로 보이게)
+        fill: new ol.style.Fill({ color:color_marker}),
+        stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
+    })
+    });
+}
+
+function NoTextMarkerStyle3() {
+    return new ol.style.Style({
+    image: new ol.style.RegularShape({
+    radius: 5, // 원 크기
+        points: 3,            
+        radius: 7,
+        fill: new ol.style.Fill({ color:color_marker}),
+        stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
+    })
+    });
+}
+
+function NoTextMarkerStyle4() {
+    return new ol.style.Style({
+    image: new ol.style.RegularShape({
+        points: 5,             // 별의 꼭짓점 수
+        radius: 8,            // 바깥쪽 반지름
+        radius2: 4,           // 안쪽 반지름
+        angle: 0,
+        fill: new ol.style.Fill({ color: color_marker }),
+        stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
+    })
+    });
+}
+
+function TextMarkerStyle1(feature) {
+    return new ol.style.Style({
+    image: new ol.style.Circle({
+    radius: 5, // 원 크기
+        fill: new ol.style.Fill({ color: color_marker }),
+    stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 }) // 테두리 흰색
+    }),
+    text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        padding: [2, 2, 2, 2],                      // 여백
+        offsetY: -28,
+        zIndex:11
+    })
+    });
+}
+
+function TextMarkerStyle2(feature) {
+    return new ol.style.Style({
+    image: new ol.style.RegularShape({
+    radius: 5, // 원 크기
+        points: 4,             // 4개 → 사각형
+        radius: 7,
+        angle: Math.PI / 4,    // 회전 보정 (정사각형으로 보이게)
+        fill: new ol.style.Fill({ color:color_marker}),
+        stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
+    }),
+    text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        padding: [2, 2, 2, 2],                      // 여백
+        offsetY: -28,
+        zIndex:11
+    })
+    });
+}
+
+function TextMarkerStyle3(feature) {
+    return new ol.style.Style({
+    image: new ol.style.RegularShape({
+    radius: 5, // 원 크기
+        points: 3,             // 4개 → 사각형
+        radius: 7,
+        fill: new ol.style.Fill({ color:color_marker}),
+        stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
+    }),
+    text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        padding: [2, 2, 2, 2],                      // 여백
+        offsetY: -28,
+        zIndex:11
+    })
+    });
+}
+
+function TextMarkerStyle4(feature) {
+    return new ol.style.Style({
+    image: new ol.style.RegularShape({
+        points: 5,             // 별의 꼭짓점 수
+        radius: 8,            // 바깥쪽 반지름
+        radius2: 4,           // 안쪽 반지름
+        angle: 0,
+        fill: new ol.style.Fill({ color: color_marker }),
+        stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
+    }),
+    text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        padding: [2, 2, 2, 2],                      // 여백
+        offsetY: -28,
+        zIndex:11
+    })
+    });
+}
+
+function TextMarkerHoverStyle1(feature) {
+    return new ol.style.Style({
+        image: new ol.style.Circle({
+        radius: 5, // 원 크기
+        fill: new ol.style.Fill({ color: 'rgba(0, 0, 255, 1)' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
+    }),
+        text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        padding: [2, 2, 2, 2],                      // 여백
+        offsetY: -28,
+        zIndex:11
+        })
+    });
+}
+
+function TextMarkerHoverStyle2(feature) {
+    return new ol.style.Style({
+        image: new ol.style.RegularShape({
+        radius: 5, // 원 크기
+            points: 4,             // 4개 → 사각형
+            radius: 7,
+            angle: Math.PI / 4,    // 회전 보정 (정사각형으로 보이게)
+            fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
+            stroke: new ol.style.Stroke({ color: 'white', width: 1 })
+        }),
+        text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        padding: [2, 2, 2, 2],                      // 여백
+        offsetY: -28,
+        zIndex:11
+        })
+    });
+}
+
+function TextMarkerHoverStyle3(feature) {
+    return new ol.style.Style({
+        image: new ol.style.RegularShape({
+        radius: 5, // 원 크기
+            points: 3,             // 4개 → 사각형
+            radius: 7,
+            fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
+            stroke: new ol.style.Stroke({ color: 'white', width: 1 })
+        }),
+        text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        padding: [2, 2, 2, 2],                      // 여백
+        offsetY: -28,
+        zIndex:11
+        })
+    });
+}
+
+function TextMarkerHoverStyle4(feature) {
+    return new ol.style.Style({
+        image: new ol.style.RegularShape({
+            points: 5,             // 별의 꼭짓점 수
+            radius: 8,            // 바깥쪽 반지름
+            radius2: 4,           // 안쪽 반지름
+            angle: 0,
+            fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
+            stroke: new ol.style.Stroke({ color: 'white', width: 1 })
+        }),
+        text: new ol.style.Text({
+        text: feature.get('name'),
+        font: '14px Noto Sans, sans-serif',
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
+        padding: [2, 2, 2, 2],                      // 여백
+        offsetY: -28,
+        zIndex:11
+        })
+    });
+}
+
+function NoTextMarkerHoverStyle1() {
+    return new ol.style.Style({
+        image: new ol.style.Circle({
+        radius: 5, // 원 크기
+        fill: new ol.style.Fill({ color: 'rgba(0, 0, 255, 1)' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
+    })
+    });
+}
+
+function NoTextMarkerHoverStyle2() {
+    return new ol.style.Style({
+        image: new ol.style.RegularShape({
+        radius: 5, // 원 크기
+            points: 4,             // 4개 → 사각형
+            radius: 7,
+            angle: Math.PI / 4,    // 회전 보정 (정사각형으로 보이게)
+            fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
+            stroke: new ol.style.Stroke({ color: 'white', width: 1 })
+        })
+    });
+}
+
+function NoTextMarkerHoverStyle3() {
+    return new ol.style.Style({
+        image: new ol.style.RegularShape({
+        radius: 5, // 원 크기
+            points: 3,             // 4개 → 사각형
+            radius: 7,
+            fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
+            stroke: new ol.style.Stroke({ color: 'white', width: 1 })
+        })
+    });
+}
+
+function NoTextMarkerHoverStyle4() {
+    return new ol.style.Style({
+        image: new ol.style.RegularShape({
+            points: 5,             // 별의 꼭짓점 수
+            radius: 8,            // 바깥쪽 반지름
+            radius2: 4,           // 안쪽 반지름
+            angle: 0,
+            fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
+            stroke: new ol.style.Stroke({ color: 'white', width: 1 })
+        })
+    });
+}
+
+
+
 
 
 
@@ -170,11 +454,44 @@ nameButton.addEventListener('click', function(e) {
     {
         nameflag = false;
 
-        for(let i = 0 ; i < markerPointFeatures.length;i++)
+        if(markerkind == 0)
         {
-            for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+            for(let i = 0 ; i < markerPointFeatures.length;i++)
             {
-                markerPointFeatures[i][j].setStyle(redCircleStyle);
+                for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+                {
+                    markerPointFeatures[i][j].setStyle(NoTextMarkerStyle1());
+                }
+            }
+        }
+        else if(markerkind == 1)
+        {
+            for(let i = 0 ; i < markerPointFeatures.length;i++)
+            {
+                for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+                {
+                    markerPointFeatures[i][j].setStyle(NoTextMarkerStyle2());
+                }
+            }
+        }
+        else if(markerkind == 2)
+        {
+            for(let i = 0 ; i < markerPointFeatures.length;i++)
+            {
+                for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+                {
+                    markerPointFeatures[i][j].setStyle(NoTextMarkerStyle3());
+                }
+            }
+        }
+        else if(markerkind == 3)
+        {
+            for(let i = 0 ; i < markerPointFeatures.length;i++)
+            {
+                for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+                {
+                    markerPointFeatures[i][j].setStyle(NoTextMarkerStyle4());
+                }
             }
         }
 
@@ -186,20 +503,53 @@ nameButton.addEventListener('click', function(e) {
             }
         }
 
-
         nameButtonimg.src = './image/name2.png';
     }
     else
     {
         nameflag = true;
 
-        for(let i = 0 ; i < markerPointFeatures.length;i++)
+        if(markerkind == 0)
         {
-            for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+            for(let i = 0 ; i < markerPointFeatures.length;i++)
             {
-                markerPointFeatures[i][j].setStyle(createCircleStyle( markerPointFeatures[i][j]));
+                for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+                {
+                    markerPointFeatures[i][j].setStyle(TextMarkerStyle1(markerPointFeatures[i][j]));
+                }
             }
         }
+        else if(markerkind == 1)
+        {
+            for(let i = 0 ; i < markerPointFeatures.length;i++)
+            {
+                for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+                {
+                    markerPointFeatures[i][j].setStyle(TextMarkerStyle2(markerPointFeatures[i][j]));
+                }
+            }
+        }
+        else if(markerkind == 2)
+        {
+            for(let i = 0 ; i < markerPointFeatures.length;i++)
+            {
+                for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+                {
+                    markerPointFeatures[i][j].setStyle(TextMarkerStyle3(markerPointFeatures[i][j]));
+                }
+            }
+        }
+        else if(markerkind == 3)
+        {
+            for(let i = 0 ; i < markerPointFeatures.length;i++)
+            {
+                for(let j = 0 ; j < markerPointFeatures[i].length;j++)
+                {
+                    markerPointFeatures[i][j].setStyle(TextMarkerStyle4(markerPointFeatures[i][j]));
+                }
+            }
+        }
+
 
         for(let i = 0 ; i < PipeLayers.length;i++)
         {
@@ -240,53 +590,6 @@ function sendMessageToCSharp(value) {
     window.chrome.webview.postMessage(value);
 }
 
-const redCircleStyle = new ol.style.Style({
-  image: new ol.style.Circle({
-    radius: 5, // 원 크기
-    fill: new ol.style.Fill({ color: 'rgba(255, 0, 0, 1)' }),
-    stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
-  })
-});
-
-function createCircleStyle(feature) {
-  return new ol.style.Style({
-    image: new ol.style.Circle({
-    radius: 5, // 원 크기
-     fill: new ol.style.Fill({ color: 'rgba(255, 0, 0, 1)' }),
-    stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
-  }),
-    text: new ol.style.Text({
-      text: feature.get('name'),
-      font: '14px Noto Sans, sans-serif',
-      fill: new ol.style.Fill({ color: 'black' }),
-      stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
-      backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
-     padding: [2, 2, 2, 2],                      // 여백
-      offsetY: -28,
-      zIndex:11
-    })
-  });
-}
-
-function createHoverStyle(feature) {
-  return new ol.style.Style({
-    image: new ol.style.Circle({
-    radius: 5, // 원 크기
-    fill: new ol.style.Fill({ color: 'rgba(0, 0, 255, 1)' }),
-    stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
-  }),
-    text: new ol.style.Text({
-      text: feature.get('name'),
-      font: '14px Noto Sans, sans-serif',
-      fill: new ol.style.Fill({ color: 'black' }),
-      stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
-      backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
-    padding: [2, 2, 2, 2],                      // 여백
-      offsetY: -28,
-      zIndex:11
-    })
-  });
-}
 
 export function setroadcount(count) {
     roadcount = count*1;
@@ -338,7 +641,7 @@ let selectpipeindex2 = -1;
 
 map.on('pointermove', function (evt) {
 
-    if(!GPSFlag)
+    if(GPSFlag == 0)
     {
         // 현재 픽셀에서 feature 찾기
         const feature = map.forEachFeatureAtPixel(evt.pixel, f => f);
@@ -356,12 +659,44 @@ map.on('pointermove', function (evt) {
             {
                 if(nameflag)
                 {
-                    hoveredFeature.setStyle(createCircleStyle(hoveredFeature));
+                    if(markerkind == 0)
+                    {
+                        hoveredFeature.setStyle(TextMarkerStyle1(hoveredFeature));
+                    }
+                    else if(markerkind == 1)
+                    {
+                        hoveredFeature.setStyle(TextMarkerStyle2(hoveredFeature));
+                    }
+                    else if(markerkind == 2)
+                    {
+                        hoveredFeature.setStyle(TextMarkerStyle3(hoveredFeature));
+                    }
+                    else if(markerkind == 3)
+                    {
+                        hoveredFeature.setStyle(TextMarkerStyle4(hoveredFeature));
+                    }
                 }
                 else
                 {
-                    hoveredFeature.setStyle(redCircleStyle);
+                    if(markerkind == 0)
+                    {
+                        hoveredFeature.setStyle(NoTextMarkerStyle1());
+                    }
+                    else if(markerkind == 1)
+                    {
+                        hoveredFeature.setStyle(NoTextMarkerStyle2());
+                    }
+                    else if(markerkind == 2)
+                    {
+                        hoveredFeature.setStyle(NoTextMarkerStyle3());
+                    }
+                    else if(markerkind == 3)
+                    {
+                        hoveredFeature.setStyle(NoTextMarkerStyle4());
+                    }
                 }
+
+
             }
             else if(hoveredFeaturekind == 3)
             {
@@ -400,7 +735,45 @@ map.on('pointermove', function (evt) {
             {
                 if(hoveredFeaturekind != 2)
                 {
-                    feature.setStyle(createHoverStyle(feature));
+                    if(nameflag)
+                    {
+                        if(markerkind == 0)
+                        {
+                            feature.setStyle(TextMarkerHoverStyle1(feature));
+                        }
+                        else if(markerkind == 1)
+                        {
+                            feature.setStyle(TextMarkerHoverStyle2(feature));
+                        }
+                        else if(markerkind == 2)
+                        {
+                            feature.setStyle(TextMarkerHoverStyle3(feature));
+                        }
+                        else if(markerkind == 3)
+                        {
+                            feature.setStyle(TextMarkerHoverStyle4(feature));
+                        }
+                    }
+                    else
+                    {
+                        if(markerkind == 0)
+                        {
+                            feature.setStyle(NoTextMarkerHoverStyle1());
+                        }
+                        else if(markerkind == 1)
+                        {
+                            feature.setStyle(NoTextMarkerHoverStyle2());
+                        }
+                        else if(markerkind == 2)
+                        {
+                            feature.setStyle(NoTextMarkerHoverStyle3());
+                        }
+                        else if(markerkind == 3)
+                        {
+                            feature.setStyle(NoTextMarkerHoverStyle4());
+                        }
+                    }
+
                     hoveredFeature = feature;
                     hoveredFeaturekind = 2;
                 }
@@ -441,7 +814,7 @@ map.on('pointermove', function (evt) {
 
 map.on('singleclick', function (evt) {
 
-    if(!GPSFlag)
+    if(GPSFlag == 0)
     {
         map.forEachFeatureAtPixel(evt.pixel, function (feature) {
             if (feature.get('noMouse')) {
@@ -783,11 +1156,11 @@ export function setmarker(index,lats,logs,names) {
 
         if(nameflag)
         {
-            pointFeature.setStyle(createCircleStyle(pointFeature));
+            pointFeature.setStyle(TextMarkerStyle1(pointFeature));
         }
         else
         {
-            pointFeature.setStyle(redCircleStyle);
+            pointFeature.setStyle(NoTextMarkerStyle1());
         }
 
 
@@ -834,6 +1207,94 @@ export function setmarker(index,lats,logs,names) {
         // markerLayers[index].push(vectorLayer);
     }
 }
+
+
+
+
+export function setmarker2(index,lats,logs,names,kind,color,color2) {
+
+    markerkind = kind*1;
+    color_marker = color;
+    color_marker_outline = color2;
+
+    for(let i = 0 ; i < markerPointLayers[index].length;i++)
+    {
+        map.removeLayer(markerPointLayers[index][i]);
+    }
+
+    markerPointLayers[index].length = 0;
+    markerPointFeatures[index].length = 0;
+
+    index = index*1;
+    let temp = names.split(",");
+    for(let i = 0 ; i < lats.length;i++)
+    {
+        const lat = lats[i]*1.0;
+        const log = logs[i]*1.0;
+
+        
+        const pointFeature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform([log,lat], 'EPSG:4326','EPSG:3857')),
+        name: temp[i]
+        });
+
+        pointFeature.set('noMouse', false);
+        pointFeature.set('type', 2);
+
+        if(nameflag)
+        {
+            if(markerkind == 0)
+            {
+                pointFeature.setStyle(TextMarkerStyle1(pointFeature));
+            }
+            else if(markerkind == 1)
+            {
+                pointFeature.setStyle(TextMarkerStyle2(pointFeature));
+            }
+            else if(markerkind == 2)
+            {
+                pointFeature.setStyle(TextMarkerStyle3(pointFeature));
+            }
+            else if(markerkind == 3)
+            {
+                pointFeature.setStyle(TextMarkerStyle4(pointFeature));
+            }
+        }
+        else
+        {
+            if(markerkind == 0)
+            {
+                pointFeature.setStyle(NoTextMarkerStyle1());
+            }
+            else if(markerkind == 1)
+            {
+                pointFeature.setStyle(NoTextMarkerStyle2());
+            }
+            else if(markerkind == 2)
+            {
+                pointFeature.setStyle(NoTextMarkerStyle3());
+            }
+            else if(markerkind == 3)
+            {
+                pointFeature.setStyle(NoTextMarkerStyle4());
+            }
+        }
+
+
+        markerPointFeatures[index].push(pointFeature);
+
+        const PointvectorSource = new ol.source.Vector({
+            features: [pointFeature]
+        });
+        const PointvectorLayer = new ol.layer.Vector({
+            source: PointvectorSource,
+            zIndex:10
+        });
+
+        markerPointLayers[index].push(PointvectorLayer);
+    }
+}
+
 
 
 
@@ -967,6 +1428,7 @@ window.removemarker = removemarker;
 window.moveview = moveview;
 window.Removeroad = Removeroad;
 window.setmarker = setmarker;
+window.setmarker2 = setmarker2;
 
 
 window.Removepipe = Removepipe;
@@ -975,16 +1437,18 @@ window.checkpipe = checkpipe;
 window.SetColor = SetColor;
 
 
+
 // GPS 클릭 기능들
 let DrawGPS = null;
-let GPSFlag = false;
+let EditGPS = null;
+let GPSFlag = 0;
 
 export function StartGPSClickMode(index) {
 
     console.log('StartGPSClickMode');
 
     index = index*1;
-    GPSFlag = true;
+    GPSFlag = 1;
     modeText.style.display = 'block';
 
 
@@ -1013,11 +1477,146 @@ export function StartGPSClickMode(index) {
             }
             map.removeInteraction(DrawGPS);
             DrawGPS = null;
-            GPSFlag = false;
+            GPSFlag = 0;
 
             sendMessageToCSharp(str);
     });
 }
+
+
+
+let EditGPSCircleFeatures = [];
+let EditGPSCircleLayer;
+let EditGPSModify;
+let EditGPSModifyIndex = 0;
+let EditGPSModifyCoord;
+
+export function StartGPSEditMode(index,lats,logs) {
+
+    console.log('StartGPSEditMode');
+
+    EditGPSCircleFeatures.length = 0;
+
+    index = index*1;
+    GPSFlag = 2;
+    modeText2.style.display = 'block';
+
+    const coordinates = [];
+
+    for(let i = 0 ; i < lats.length;i++)
+    {
+        const lat = lats[i]*1.0;
+        const log = logs[i]*1.0;
+        coordinates.push(ol.proj.transform([log,lat], 'EPSG:4326','EPSG:3857'));
+    }
+
+    const pointSource = new ol.source.Vector();
+    const pointFeatures = coordinates.map(c => new ol.Feature({ geometry: new ol.geom.Point(c) }));
+
+    for(let i = 0 ; i < pointFeatures.length;i++)
+    {
+        pointFeatures[i].set('type', 4);
+        EditGPSCircleFeatures.push(pointFeatures[i]);
+    }
+
+    pointSource.addFeatures(pointFeatures);
+
+    EditGPSCircleLayer = new ol.layer.Vector({
+        source: pointSource,
+        style: new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({ color: '#00ffff' }),
+                stroke: new ol.style.Stroke({ color: '#000', width: 2 }),
+            }),
+        }),
+    });
+
+    const line = new ol.geom.LineString(coordinates);
+    const lineFeature = new ol.Feature({
+    geometry: line
+    });
+
+    const vectorSource = new ol.source.Vector({
+    features: [lineFeature]
+    });
+
+    EditGPS = new ol.layer.Vector({
+    source: vectorSource,
+    style: new ol.style.Style({
+        stroke: new ol.style.Stroke({ color: '#e85555ff', width: 5 })})
+    });
+
+    map.addLayer(EditGPS);
+    map.addLayer(EditGPSCircleLayer);
+
+    EditGPSModify = new ol.interaction.Modify({
+    source: vectorSource,
+    insertVertexCondition: ol.events.condition.never,
+
+    style: function (feature) {
+    const geom = feature.getGeometry();
+    if (geom.getType() === 'Point') {
+        return new ol.style.Style({
+            image: new ol.style.Circle({
+            radius: 6,
+            fill: new ol.style.Fill({ color: '#00ffff' }),
+            stroke: new ol.style.Stroke({ color: '#000', width: 2 }),
+            }),
+        });
+        }
+        return null;
+    },
+    });
+
+    map.addInteraction(EditGPSModify);
+
+    EditGPSModify.on('modifystart', function (evt) {
+        console.log('수정 시작!');
+
+        const feature = evt.features.item(0);
+        const geom = feature.getGeometry();
+        const coords = geom.getCoordinates();
+        const clickCoord = evt.mapBrowserEvent.coordinate;
+
+        EditGPSModifyIndex = -1;
+        let minDist = Infinity;
+
+        coords.forEach((c, i) => {
+            const dx = c[0] - clickCoord[0];
+            const dy = c[1] - clickCoord[1];
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < minDist) {
+            minDist = dist;
+            EditGPSModifyIndex = i;
+            }
+        });
+
+        evt.features.forEach((feature) => {
+            const geom = feature.getGeometry();
+            geom.on('change', function (e) {
+            const coords = e.target.getCoordinates();
+            EditGPSCircleFeatures[EditGPSModifyIndex].getGeometry().setCoordinates(coords[EditGPSModifyIndex]);
+            });
+        });
+    });
+
+    // 6️⃣ 점 이동 후 좌표 확인
+    EditGPSModify.on('modifyend', (event) => {
+
+        const feature = event.features.item(0);
+
+        const newCoords = feature.getGeometry().getCoordinates();
+        EditGPSModifyCoord = feature.getGeometry().getCoordinates().map(c => ol.proj.toLonLat(c));
+        console.log('수정된 좌표:', newCoords);
+
+        EditGPSCircleFeatures[EditGPSModifyIndex].getGeometry().setCoordinates(newCoords[EditGPSModifyIndex]);
+    });
+}
+
+
+
+
 
 const mapElement = map.getTargetElement();
 
@@ -1033,21 +1632,55 @@ window.addEventListener('keydown', (event) => {
 
     // ENTER
     if (keycode == 13) {
-        DrawGPS.finishDrawing();
-        modeText.style.display = 'none';
+        if(GPSFlag == 1)
+        {
+            DrawGPS.finishDrawing();
+            modeText.style.display = 'none';
+        }
+        else if(GPSFlag == 2)
+        {
+            map.removeLayer(EditGPS);
+            map.removeLayer(EditGPSCircleLayer);
+            EditGPS = null;
+            EditGPSCircleLayer = null;
+            modeText2.style.display = 'none';
+            map.removeInteraction(EditGPSModify);
+            GPSFlag = 0;
+
+            // let str = "";
+            // for(let i = 0 ; i < EditGPSModifyCoord.length;i++)
+            // {
+            //     str += EditGPSModifyCoord[i][1] + "_"+EditGPSModifyCoord[i][0]+ "_";
+            // }
+            // sendMessageToCSharp(str);
+        }
+
     }
 
     // ESC
     if (keycode == 27) {
-        modeText.style.display = 'none';
-        GPSFlag = false;
-        DrawGPS.abortDrawing();
-        map.removeInteraction(DrawGPS);
+        if(GPSFlag == 1)
+        {
+            modeText.style.display = 'none';
+            GPSFlag = 0;
+            DrawGPS.abortDrawing();
+            map.removeInteraction(DrawGPS);
+        }
+        else if(GPSFlag == 2)
+        {
+            map.removeLayer(EditGPS);
+            map.removeLayer(EditGPSCircleLayer);
+            EditGPS = null;
+            EditGPSCircleLayer = null;
+            modeText2.style.display = 'none';
+            map.removeInteraction(EditGPSModify);
+            GPSFlag = 0;
+        }
     }
 });
 
 window.StartGPSClickMode = StartGPSClickMode;
-
+window.StartGPSEditMode = StartGPSEditMode;
 
 function setMapView(type) {
   // 기존 base layer 제거
