@@ -827,11 +827,13 @@ map.on('singleclick', function (evt) {
             }
             else if (feature.get('type') == 2) // 마커
             {
-
+                let tt = feature.get('line');
+                sendMessageToCSharp( 'marker_'+tt);
             }
             else if (feature.get('type') == 3) // 관로
             {
-                
+                let tt = feature.get('line');
+                sendMessageToCSharp('pipe_'+tt);
             }
 
             // 반환값 true는 반복 중단 (원하는 로직에 따라 조절)
@@ -1240,6 +1242,7 @@ export function setmarker2(index,lats,logs,names,kind,color,color2) {
 
         pointFeature.set('noMouse', false);
         pointFeature.set('type', 2);
+        pointFeature.set('line', index);
 
         if(nameflag)
         {
@@ -1336,6 +1339,7 @@ export function addpipe(index,lats,logs,name) {
     lineFeature.set('noMouse', false);
     lineFeature.set('type', 3);
     lineFeature.set('name', name);
+    lineFeature.set('line', index);
 
     PipeFeatures[index].push(lineFeature);
 
@@ -1622,8 +1626,13 @@ const mapElement = map.getTargetElement();
 
 mapElement.addEventListener('contextmenu', function (event) {
    event.preventDefault(); // 기본 브라우저 우클릭 메뉴 막기
-    DrawGPS.removeLastPoint(); // 마지막 점 제거
-    DrawGPS.removeLastPoint(); // 마지막 점 제거
+
+    if(GPSFlag != 0)
+    {
+        DrawGPS.removeLastPoint(); // 마지막 점 제거
+        DrawGPS.removeLastPoint(); // 마지막 점 제거
+    }
+
 });
 
 window.addEventListener('keydown', (event) => {
@@ -1718,3 +1727,97 @@ const toggle = document.getElementById('viewToggle');
       });
     });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+let rightmouseFeature = null;
+const menu = document.getElementById('context-menu');
+
+    // 1) 우클릭 이벤트
+map.getViewport().addEventListener('contextmenu', function(e) {
+  e.preventDefault(); // 브라우저 기본 메뉴 막기
+
+  // 지도 좌표
+  const pixel = map.getEventPixel(e);
+  const feature = map.forEachFeatureAtPixel(pixel, f => f);
+
+    map.getTargetElement().style.cursor = feature ? 'pointer' : '';
+
+
+  if (feature) {
+    if (feature.get('noMouse')) {
+      return false; // 👉 이 피처는 무시
+    }
+
+
+    if (feature.get('type') == 1) // 측선
+    {
+        // menu.style.left = e.pageX + 'px';
+        // menu.style.top = e.pageY + 'px';
+        // menu.style.display = 'block';
+    }
+    else if (feature.get('type') == 2) // 마커
+    {
+        rightmouseFeature = feature;
+        menu.style.left = e.pageX + 'px';
+        menu.style.top = e.pageY + 'px';
+        menu.style.display = 'block';
+    }
+    if (feature.get('type') == 3) // 관로
+    {
+        // menu.style.left = e.pageX + 'px';
+        // menu.style.top = e.pageY + 'px';
+        // menu.style.display = 'block';
+    }
+
+
+
+  } else {
+    menu.style.display = 'none';
+  }
+});
+
+// 이름 변경
+document.getElementById('rename').addEventListener('click', () => {
+  if (rightmouseFeature) {
+
+    // const newName = prompt('새 마커 이름을 입력하세요:', rightmouseFeature.get('name'));
+    // if (newName) rightmouseFeature.set('name', newName);
+
+  }
+  menu.style.display = 'none';
+});
+
+// 삭제
+document.getElementById('delete').addEventListener('click', () => {
+  if (rightmouseFeature) {
+
+    // const source = selectedFeature.getLayer(map).getSource(); // 피처 소스 가져오기
+    // source.removeFeature(selectedFeature);
+
+  }
+  menu.style.display = 'none';
+});
+
+// 지도 클릭 시 메뉴 숨기기
+map.on('click', () => {
+  menu.style.display = 'none';
+});

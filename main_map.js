@@ -237,7 +237,6 @@ function TextMarkerHoverStyle1(feature) {
     });
 }
 
-
 function TextMarkerHoverStyle2(feature) {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
@@ -261,8 +260,6 @@ function TextMarkerHoverStyle2(feature) {
     });
 }
 
-
-
 function TextMarkerHoverStyle3(feature) {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
@@ -284,7 +281,6 @@ function TextMarkerHoverStyle3(feature) {
         })
     });
 }
-
 
 function TextMarkerHoverStyle4(feature) {
     return new ol.style.Style({
@@ -309,10 +305,6 @@ function TextMarkerHoverStyle4(feature) {
     });
 }
 
-
-
-
-
 function NoTextMarkerHoverStyle1() {
     return new ol.style.Style({
         image: new ol.style.Circle({
@@ -322,7 +314,6 @@ function NoTextMarkerHoverStyle1() {
     })
     });
 }
-
 
 function NoTextMarkerHoverStyle2() {
     return new ol.style.Style({
@@ -337,8 +328,6 @@ function NoTextMarkerHoverStyle2() {
     });
 }
 
-
-
 function NoTextMarkerHoverStyle3() {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
@@ -350,7 +339,6 @@ function NoTextMarkerHoverStyle3() {
         })
     });
 }
-
 
 function NoTextMarkerHoverStyle4() {
     return new ol.style.Style({
@@ -367,36 +355,6 @@ function NoTextMarkerHoverStyle4() {
 
 
 
-
-// function TextMarkerHoverStyle1(feature) {
-//   return new ol.style.Style({
-//     image: new ol.style.Circle({
-//     radius: 5, // 원 크기
-//     fill: new ol.style.Fill({ color: 'rgba(0, 0, 255, 1)' }),
-//     stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
-//   }),
-//     text: new ol.style.Text({
-//       text: feature.get('name'),
-//       font: '14px Noto Sans, sans-serif',
-//       fill: new ol.style.Fill({ color: 'black' }),
-//       stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
-//       backgroundFill: new ol.style.Fill({ color: 'rgba(255,255,255,0.7)' }), // 배경색
-//     padding: [2, 2, 2, 2],                      // 여백
-//       offsetY: -28,
-//       zIndex:11
-//     })
-//   });
-// }
-
-
-
-// const HoverCircleStyle = new ol.style.Style({
-//   image: new ol.style.Circle({
-//     radius: 7, // 원 크기
-//     fill: new ol.style.Fill({ color: 'rgba(0, 0, 255, 1)' }),
-//     stroke: new ol.style.Stroke({ color: 'white', width: 2 }) // 테두리 흰색
-//   })
-// });
 
 
 const normalLayer = new ol.layer.Tile({
@@ -422,6 +380,18 @@ const satelliteLayer = new ol.layer.Tile({
     visible: true
 })
 
+
+const scaleLineControl = new ol.control.ScaleLine({
+    units: 'metric',      // meters/km
+    bar: true,            // 막대 형태
+    steps: 4,
+    text: true,
+    minWidth: 100
+});
+
+// console.log(scaleLineControl);
+// console.log(ol.control.defaults());
+
 const map = new ol.Map({
 target: 'map',
 layers: [satelliteLayer],
@@ -430,6 +400,16 @@ view: new ol.View({
     center: ol.proj.transform([126.660509954,37.540375191], 'EPSG:4326','EPSG:3857'),
     zoom:19
 }),
+controls: [
+    new ol.control.Zoom(),
+    new ol.control.Attribution(),
+    new ol.control.Rotate(),
+    new ol.control.ScaleLine({
+      units: 'metric',
+      bar: true,
+      text: true
+    })
+  ]
 });
 
 const markerimg = new ol.style.Icon({
@@ -1577,3 +1557,15 @@ const toggle = document.getElementById('viewToggle');
 
       });
     });
+
+
+
+
+
+
+
+
+
+
+
+

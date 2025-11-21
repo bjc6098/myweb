@@ -36,3 +36,42 @@
       transition: left 0.3s ease;
       z-index: 0;
     }
+
+
+
+
+
+
+    
+/* ScaleLine 전체 박스 위치 조정 */
+.ol-scale-line {
+  left: auto !important;
+  right: 10px !important;
+  bottom: 10px !important;
+  top: auto !important;
+}
+
+/* 내부 스타일 (선택): 미관 개선용 */
+.ol-scale-line-inner {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+#rename:hover{
+    background-color: rgb(233, 233, 233);
+}
+
+#rename:active{
+    background-color: rgb(212, 212, 212);
+}
+
+#delete:hover{
+    background-color: rgb(233, 233, 233);
+}
+
+#delete:active{
+    background-color: rgb(212, 212, 212);
+}
