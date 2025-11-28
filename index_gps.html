@@ -53,7 +53,7 @@
             </span>
     </div>
 
-       <div class="toggle-buttons" id="viewToggle" style="position: absolute;right: 10px;top: 10px;">
+  <div class="toggle-buttons" id="viewToggle" style="position: absolute;right: 10px;top: 10px;">
     <div class="toggle-indicator" id="indicator" style="left: 63px;"></div>
     <button class="toggle-button" data-view="map">일반지도</button>
     <button class="toggle-button active" data-view="sky">위성지도</button>
@@ -76,6 +76,22 @@
 ">
   <li id="rename" style="padding: 5px 20px; cursor: pointer;">마커 이름 변경</li>
   <li id="delete" style="padding: 5px 20px; cursor: pointer;">마커 삭제</li>
+</ul>
+
+
+<ul id="context-menu2" style="
+    position: absolute;
+    display: none;
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+">
+  <li id="rename2" style="padding: 5px 20px; cursor: pointer;">관로 이름 변경</li>
+  <li id="delete2" style="padding: 5px 20px; cursor: pointer;">관로 삭제</li>
 </ul>
 
   

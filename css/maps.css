@@ -75,3 +75,21 @@
 #delete:active{
     background-color: rgb(212, 212, 212);
 }
+
+
+
+#rename2:hover{
+    background-color: rgb(233, 233, 233);
+}
+
+#rename2:active{
+    background-color: rgb(212, 212, 212);
+}
+
+#delete2:hover{
+    background-color: rgb(233, 233, 233);
+}
+
+#delete2:active{
+    background-color: rgb(212, 212, 212);
+}

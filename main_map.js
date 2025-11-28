@@ -37,6 +37,12 @@ let nameflag = true;
 let markerkind = 0;
 
 
+let mapkindflag = 1; // 1 == Vworld ,2  == OpenStreetMap
+let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
+
+
+
+
 function createPipetextStyle(feature) {
     return new ol.style.Style({
     text: new ol.style.Text({
@@ -357,7 +363,8 @@ function NoTextMarkerHoverStyle4() {
 
 
 
-const normalLayer = new ol.layer.Tile({
+
+const normalLayer_VWorld = new ol.layer.Tile({
     source: new ol.source.XYZ({
         projection : 'EPSG:3857',
         //url : 'https://map.pstatic.net/nrb/styles/basic/1750413718/{z}/{x}/{y}.png?mt=bg.oh',
@@ -366,10 +373,10 @@ const normalLayer = new ol.layer.Tile({
         crossOrigin: 'anonymous'
     }),
     id: 'vworld_Base',
-    visible: true
+    visible: false
 })
 
-const satelliteLayer = new ol.layer.Tile({
+const satelliteLayer_Vworld = new ol.layer.Tile({
     source: new ol.source.XYZ({
         projection : 'EPSG:3857',
         //url : 'https://xdworld.vworld.kr/2d/Satellite/service/{z}/{x}/{y}.jpeg',
@@ -380,21 +387,16 @@ const satelliteLayer = new ol.layer.Tile({
     visible: true
 })
 
-
-const scaleLineControl = new ol.control.ScaleLine({
-    units: 'metric',      // meters/km
-    bar: true,            // 막대 형태
-    steps: 4,
-    text: true,
-    minWidth: 100
+const normalLayer_OSM = new ol.layer.Tile({
+    title: 'OSM',
+    visible: false,
+    source: new ol.source.OSM(),   // 기본 OSM 타일
 });
 
-// console.log(scaleLineControl);
-// console.log(ol.control.defaults());
 
 const map = new ol.Map({
 target: 'map',
-layers: [satelliteLayer],
+layers: [satelliteLayer_Vworld,normalLayer_VWorld,normalLayer_OSM],
 
 view: new ol.View({
     center: ol.proj.transform([126.660509954,37.540375191], 'EPSG:4326','EPSG:3857'),
@@ -1523,11 +1525,35 @@ window.SetColor = SetColor;
 
 
 function setMapView(type) {
-  // 기존 base layer 제거
-  map.getLayers().setAt(0,
-    type === 'satellite' ? satelliteLayer : normalLayer
-  );
+
+    if(mapkindflag == 1)
+    {
+        if(type == 'satellite')
+        {
+            satelliteLayer_Vworld.setVisible(true);
+            normalLayer_VWorld.setVisible(false);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(false);
+            normalLayer_VWorld.setVisible(true);
+        }
+    }
+    else if(mapkindflag == 2)
+    {
+        if(type == 'satellite')
+        {
+            satelliteLayer_Vworld.setVisible(true);
+            normalLayer_OSM.setVisible(false);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(false);
+            normalLayer_OSM.setVisible(true);
+        }
+    }
 }
+
 
 
 const toggle = document.getElementById('viewToggle');
@@ -1549,10 +1575,12 @@ const toggle = document.getElementById('viewToggle');
         if(btn.dataset.view == "sky")
         {
             setMapView('satellite');
+            mapkindflag2 = 2;
         }
         else
         {
             setMapView('normal');
+            mapkindflag2 = 1;
         }
 
       });
@@ -1561,11 +1589,71 @@ const toggle = document.getElementById('viewToggle');
 
 
 
+export function setmapkind(flag) {
+
+
+    console.log("setmapkind");
+
+    flag = flag*1;
+
+    if(mapkindflag == 1)
+    {
+        if(mapkindflag2 == 1)
+        {
+            normalLayer_VWorld.setVisible(false);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(false);
+        }
+    }
+    else if(mapkindflag == 2)
+    {
+        if(mapkindflag2 == 1)
+        {
+            normalLayer_OSM.setVisible(false);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(false);
+        }
+    }
+
+    mapkindflag = flag;
+
+    if(mapkindflag == 1)
+    {
+        if(mapkindflag2 == 1)
+        {
+            normalLayer_VWorld.setVisible(true);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(true);
+        }
+    }
+    else if(mapkindflag == 2)
+    {
+        if(mapkindflag2 == 1)
+        {
+            normalLayer_OSM.setVisible(true);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(true);
+        }
+    }
+
+}
 
 
 
 
+export function setmapkind2(flag) {
+    mapkindflag = flag;
+}
 
 
 
-
+window.setmapkind = setmapkind;
+window.setmapkind2 = setmapkind2;

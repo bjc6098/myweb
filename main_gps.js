@@ -38,7 +38,8 @@ let color_marker_outline = '#ffffffff';
 
 let markerkind = 0;
 
-
+let mapkindflag = 1; // 1 == Vworld ,2  == OpenStreetMap
+let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
 
 
 
@@ -366,7 +367,7 @@ const PipeblueInnerLine = new ol.style.Style({
 
 
 
-const normalLayer = new ol.layer.Tile({
+const normalLayer_VWorld = new ol.layer.Tile({
     source: new ol.source.XYZ({
         projection : 'EPSG:3857',
         //url : 'https://map.pstatic.net/nrb/styles/basic/1750413718/{z}/{x}/{y}.png?mt=bg.oh',
@@ -375,10 +376,10 @@ const normalLayer = new ol.layer.Tile({
         crossOrigin: 'anonymous'
     }),
     id: 'vworld_Base',
-    visible: true
+    visible: false
 })
 
-const satelliteLayer = new ol.layer.Tile({
+const satelliteLayer_Vworld = new ol.layer.Tile({
     source: new ol.source.XYZ({
         projection : 'EPSG:3857',
         //url : 'https://xdworld.vworld.kr/2d/Satellite/service/{z}/{x}/{y}.jpeg',
@@ -389,16 +390,34 @@ const satelliteLayer = new ol.layer.Tile({
     visible: true
 })
 
+const normalLayer_OSM = new ol.layer.Tile({
+    title: 'OSM',
+    visible: false,
+    source: new ol.source.OSM(),   // 기본 OSM 타일
+});
+
+
+
 
 
 const map = new ol.Map({
 target: 'map',
-layers: [satelliteLayer],
+layers: [satelliteLayer_Vworld,normalLayer_VWorld,normalLayer_OSM],
 
 view: new ol.View({
     center: ol.proj.transform([126.660509954,37.540375191], 'EPSG:4326','EPSG:3857'),
     zoom:19
 }),
+controls: [
+    new ol.control.Zoom(),
+    new ol.control.Attribution(),
+    new ol.control.Rotate(),
+    new ol.control.ScaleLine({
+      units: 'metric',
+      bar: true,
+      text: true
+    })
+  ]
 });
 
 const markerimg = new ol.style.Icon({
@@ -1243,6 +1262,7 @@ export function setmarker2(index,lats,logs,names,kind,color,color2) {
         pointFeature.set('noMouse', false);
         pointFeature.set('type', 2);
         pointFeature.set('line', index);
+        pointFeature.set('name', temp[i]);
 
         if(nameflag)
         {
@@ -1418,27 +1438,6 @@ export function removemarker(index) {
 }
 
 
-
-
-window.setroadcount = setroadcount;
-window.setroads = setroads;
-window.checkroad = checkroad;
-window.selectroad = selectroad;
-
-window.checkmarker = checkmarker;
-
-window.removemarker = removemarker;
-
-window.moveview = moveview;
-window.Removeroad = Removeroad;
-window.setmarker = setmarker;
-window.setmarker2 = setmarker2;
-
-
-window.Removepipe = Removepipe;
-window.addpipe = addpipe;
-window.checkpipe = checkpipe;
-window.SetColor = SetColor;
 
 
 
@@ -1688,14 +1687,34 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
-window.StartGPSClickMode = StartGPSClickMode;
-window.StartGPSEditMode = StartGPSEditMode;
-
 function setMapView(type) {
-  // 기존 base layer 제거
-  map.getLayers().setAt(0,
-    type === 'satellite' ? satelliteLayer : normalLayer
-  );
+
+    if(mapkindflag == 1)
+    {
+        if(type == 'satellite')
+        {
+            satelliteLayer_Vworld.setVisible(true);
+            normalLayer_VWorld.setVisible(false);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(false);
+            normalLayer_VWorld.setVisible(true);
+        }
+    }
+    else if(mapkindflag == 2)
+    {
+        if(type == 'satellite')
+        {
+            satelliteLayer_Vworld.setVisible(true);
+            normalLayer_OSM.setVisible(false);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(false);
+            normalLayer_OSM.setVisible(true);
+        }
+    }
 }
 
 
@@ -1718,10 +1737,12 @@ const toggle = document.getElementById('viewToggle');
         if(btn.dataset.view == "sky")
         {
             setMapView('satellite');
+            mapkindflag2 = 2;
         }
         else
         {
             setMapView('normal');
+            mapkindflag2 = 1;
         }
 
       });
@@ -1737,19 +1758,9 @@ const toggle = document.getElementById('viewToggle');
 
 
 
-
-
-
-
-
-
-
-
-    
-
-
 let rightmouseFeature = null;
 const menu = document.getElementById('context-menu');
+const menu2 = document.getElementById('context-menu2');
 
     // 1) 우클릭 이벤트
 map.getViewport().addEventListener('contextmenu', function(e) {
@@ -1761,12 +1772,10 @@ map.getViewport().addEventListener('contextmenu', function(e) {
 
     map.getTargetElement().style.cursor = feature ? 'pointer' : '';
 
-
   if (feature) {
     if (feature.get('noMouse')) {
       return false; // 👉 이 피처는 무시
     }
-
 
     if (feature.get('type') == 1) // 측선
     {
@@ -1783,41 +1792,152 @@ map.getViewport().addEventListener('contextmenu', function(e) {
     }
     if (feature.get('type') == 3) // 관로
     {
-        // menu.style.left = e.pageX + 'px';
-        // menu.style.top = e.pageY + 'px';
-        // menu.style.display = 'block';
+        rightmouseFeature = feature;
+        menu2.style.left = e.pageX + 'px';
+        menu2.style.top = e.pageY + 'px';
+        menu2.style.display = 'block';
     }
-
-
-
   } else {
     menu.style.display = 'none';
+    menu2.style.display = 'none';
   }
 });
 
 // 이름 변경
 document.getElementById('rename').addEventListener('click', () => {
-  if (rightmouseFeature) {
-
-    // const newName = prompt('새 마커 이름을 입력하세요:', rightmouseFeature.get('name'));
-    // if (newName) rightmouseFeature.set('name', newName);
-
-  }
-  menu.style.display = 'none';
+    if (rightmouseFeature) {
+    let index = rightmouseFeature.get('line');
+    let name = rightmouseFeature.get('name');
+    sendMessageToCSharp('mrename_' + index + "_" + name);
+    }
+    menu.style.display = 'none';
 });
 
 // 삭제
 document.getElementById('delete').addEventListener('click', () => {
-  if (rightmouseFeature) {
+    if (rightmouseFeature) {
+    let index = rightmouseFeature.get('line');
+    let name = rightmouseFeature.get('name');
+    sendMessageToCSharp('mdelete_' + index + "_" + name);
+    }
+    menu.style.display = 'none';
+});
 
-    // const source = selectedFeature.getLayer(map).getSource(); // 피처 소스 가져오기
-    // source.removeFeature(selectedFeature);
 
-  }
-  menu.style.display = 'none';
+// 관로이름 변경
+document.getElementById('rename2').addEventListener('click', () => {
+    if (rightmouseFeature) {
+    let index = rightmouseFeature.get('line');
+    let name = rightmouseFeature.get('name');
+    sendMessageToCSharp('prename_' + index + "_" + name);
+    }
+    menu2.style.display = 'none';
+});
+
+// 관로삭제
+document.getElementById('delete2').addEventListener('click', () => {
+    if (rightmouseFeature) {
+    let index = rightmouseFeature.get('line');
+    let name = rightmouseFeature.get('name');
+    sendMessageToCSharp('pdelete_' + index + "_" + name);
+    }
+    menu2.style.display = 'none';
 });
 
 // 지도 클릭 시 메뉴 숨기기
 map.on('click', () => {
-  menu.style.display = 'none';
+    menu.style.display = 'none';
+    menu2.style.display = 'none';
 });
+
+
+
+
+
+
+export function setmapkind(flag) {
+
+    flag = flag*1;
+
+    if(mapkindflag == 1)
+    {
+        if(mapkindflag2 == 1)
+        {
+            normalLayer_VWorld.setVisible(false);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(false);
+        }
+    }
+    else if(mapkindflag == 2)
+    {
+        if(mapkindflag2 == 1)
+        {
+            normalLayer_OSM.setVisible(false);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(false);
+        }
+    }
+
+    mapkindflag = flag;
+
+    if(mapkindflag == 1)
+    {
+        if(mapkindflag2 == 1)
+        {
+            normalLayer_VWorld.setVisible(true);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(true);
+        }
+    }
+    else if(mapkindflag == 2)
+    {
+        if(mapkindflag2 == 1)
+        {
+            normalLayer_OSM.setVisible(true);
+        }
+        else
+        {
+            satelliteLayer_Vworld.setVisible(true);
+        }
+    }
+
+}
+
+export function setmapkind2(flag) {
+    mapkindflag = flag;
+}
+
+
+
+
+window.setroadcount = setroadcount;
+window.setroads = setroads;
+window.checkroad = checkroad;
+window.selectroad = selectroad;
+
+window.checkmarker = checkmarker;
+
+window.removemarker = removemarker;
+
+window.moveview = moveview;
+window.Removeroad = Removeroad;
+window.setmarker = setmarker;
+window.setmarker2 = setmarker2;
+
+
+window.Removepipe = Removepipe;
+window.addpipe = addpipe;
+window.checkpipe = checkpipe;
+window.SetColor = SetColor;
+
+
+window.StartGPSClickMode = StartGPSClickMode;
+window.StartGPSEditMode = StartGPSEditMode;
+window.setmapkind = setmapkind;
+window.setmapkind2 = setmapkind2;
