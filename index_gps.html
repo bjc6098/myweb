@@ -14,9 +14,14 @@
     <!-- <link rel="stylesheet" href="./main.css"> -->
     <link rel="stylesheet" href="./css/maps.css">
 
+<!-- <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=43dabc7e1a9f0a27c255f08840f28fd9&libraries=services"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
 
+
+
+  <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=43dabc7e1a9f0a27c255f08840f28fd9&autoload=false&libraries=services"></script>
   <script src="./main_gps.js" type="module" >
   </script>
 
@@ -93,6 +98,15 @@
   <li id="rename2" style="padding: 5px 20px; cursor: pointer;">관로 이름 변경</li>
   <li id="delete2" style="padding: 5px 20px; cursor: pointer;">관로 삭제</li>
 </ul>
+
+
+
+  <div id="addressBox" style="position: absolute;background-color: #ffffff;border: 1px solid #000000;padding:5px;display: none;z-index: 1000;">
+    <span id="addressBoxText" style="padding:8px">
+    </span>
+    <img id="addressBox_close" style="position: absolute;cursor: pointer;width: 10px;height: 10px;top: 1px;right: 1px;" src="image/Cancel Bold.png">
+  </div>
+
 
   
     

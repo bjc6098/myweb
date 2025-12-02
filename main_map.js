@@ -1,6 +1,7 @@
 
 'use strict';
 
+
 let roadLayers;
 let markerLayers = [];
 let markerPointLayers = [];
@@ -39,7 +40,6 @@ let markerkind = 0;
 
 let mapkindflag = 1; // 1 == Vworld ,2  == OpenStreetMap
 let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
-
 
 
 
@@ -1643,17 +1643,59 @@ export function setmapkind(flag) {
             satelliteLayer_Vworld.setVisible(true);
         }
     }
-
 }
-
-
-
 
 export function setmapkind2(flag) {
     mapkindflag = flag;
 }
 
 
-
 window.setmapkind = setmapkind;
 window.setmapkind2 = setmapkind2;
+
+
+let lastMouse;
+const menu3 = document.getElementById('addressBox');
+const addressBox_close = document.getElementById('addressBox_close');
+const addressBoxText = document.getElementById('addressBoxText');
+
+
+// 1) 우클릭 이벤트
+map.getViewport().addEventListener('contextmenu', function(e) {
+  e.preventDefault(); // 브라우저 기본 메뉴 막기
+    lastMouse = e;
+  // 지도 좌표
+  const pixel = map.getEventPixel(e);
+  const feature = map.forEachFeatureAtPixel(pixel, f => f);
+
+    map.getTargetElement().style.cursor = feature ? 'pointer' : '';
+
+  if (feature) {
+    if (feature.get('noMouse')) {
+      return false; // 👉 이 피처는 무시
+    }
+  } else {
+    const coord = map.getCoordinateFromPixel(pixel);
+    const point = ol.proj.transform([coord[0],coord[1]], 'EPSG:3857','EPSG:4326');
+    // 위도, 경도
+    var lat = point[1];
+    var lng = point[0];
+    sendMessageToCSharp('address_' + lat + "_" + lng);
+  }
+});
+
+
+export function SetAddress(address) {
+    console.log('SetAddress');
+    addressBoxText.innerText = address;
+    // menu3.innerText = address;
+    menu3.style.left = (lastMouse.pageX - 80) + 'px';
+    menu3.style.top = (lastMouse.pageY - 40) + 'px';
+    menu3.style.display = 'block';
+}
+
+addressBox_close.addEventListener('click', () => {
+    menu3.style.display = 'none';
+});
+
+window.SetAddress = SetAddress;

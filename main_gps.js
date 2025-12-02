@@ -1,6 +1,9 @@
 
 'use strict';
 
+
+let lastMouse;
+
 let roadLayers;
 let roadfeatures;
 let roadcount = 0;
@@ -42,6 +45,12 @@ let mapkindflag = 1; // 1 == Vworld ,2  == OpenStreetMap
 let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
 
 
+let rightmouseFeature = null;
+const menu = document.getElementById('context-menu');
+const menu2 = document.getElementById('context-menu2');
+const menu3 = document.getElementById('addressBox');
+const addressBox_close = document.getElementById('addressBox_close');
+const addressBoxText = document.getElementById('addressBoxText');
 
 
 function NoTextMarkerStyle1() {
@@ -854,6 +863,8 @@ map.on('singleclick', function (evt) {
                 let tt = feature.get('line');
                 sendMessageToCSharp('pipe_'+tt);
             }
+
+            menu3.style.display = 'none';
 
             // 반환값 true는 반복 중단 (원하는 로직에 따라 조절)
             return true;
@@ -1750,22 +1761,10 @@ const toggle = document.getElementById('viewToggle');
 
 
 
-
-
-
-
-
-
-
-
-let rightmouseFeature = null;
-const menu = document.getElementById('context-menu');
-const menu2 = document.getElementById('context-menu2');
-
-    // 1) 우클릭 이벤트
+// 1) 우클릭 이벤트
 map.getViewport().addEventListener('contextmenu', function(e) {
   e.preventDefault(); // 브라우저 기본 메뉴 막기
-
+    lastMouse = e;
   // 지도 좌표
   const pixel = map.getEventPixel(e);
   const feature = map.forEachFeatureAtPixel(pixel, f => f);
@@ -1800,8 +1799,36 @@ map.getViewport().addEventListener('contextmenu', function(e) {
   } else {
     menu.style.display = 'none';
     menu2.style.display = 'none';
+
+    const coord = map.getCoordinateFromPixel(pixel);
+    const point = ol.proj.transform([coord[0],coord[1]], 'EPSG:3857','EPSG:4326');
+
+    console.log(point)
+
+    // 위도, 경도
+    var lat = point[1];
+    var lng = point[0];
+
+    sendMessageToCSharp('address_' + lat + "_" + lng);
   }
 });
+
+
+export function SetAddress(address) {
+    console.log('SetAddress');
+    addressBoxText.innerText = address;
+    // menu3.innerText = address;
+    menu3.style.left = (lastMouse.pageX - 80) + 'px';
+    menu3.style.top = (lastMouse.pageY - 40) + 'px';
+    menu3.style.display = 'block';
+}
+
+
+
+addressBox_close.addEventListener('click', () => {
+    menu3.style.display = 'none';
+});
+
 
 // 이름 변경
 document.getElementById('rename').addEventListener('click', () => {
@@ -1941,3 +1968,4 @@ window.StartGPSClickMode = StartGPSClickMode;
 window.StartGPSEditMode = StartGPSEditMode;
 window.setmapkind = setmapkind;
 window.setmapkind2 = setmapkind2;
+window.SetAddress = SetAddress;

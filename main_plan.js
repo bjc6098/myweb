@@ -1,6 +1,8 @@
 
 'use strict';
 
+
+let lastMouse;
 let planLayers;
 let planviewCount;
 
@@ -42,6 +44,12 @@ let mapkindflag = 1; // 1 == Vworld ,2  == OpenStreetMap
 let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
 
 
+let rightmouseFeature = null;
+const menu = document.getElementById('context-menu');
+const menu2 = document.getElementById('context-menu2');
+const menu3 = document.getElementById('addressBox');
+const addressBox_close = document.getElementById('addressBox_close');
+const addressBoxText = document.getElementById('addressBoxText');
 
 
 const PipelineStyle = new ol.style.Style({
@@ -1420,15 +1428,11 @@ export function setmapkind(flag) {
             satelliteLayer_Vworld.setVisible(true);
         }
     }
-
 }
-
 
 export function setmapkind2(flag) {
     mapkindflag = flag;
 }
 
-
 window.setmapkind = setmapkind;
 window.setmapkind2 = setmapkind2;
-
