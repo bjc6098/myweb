@@ -60,36 +60,11 @@
   font-size: 11px;
 }
 
-#rename:hover{
+
+.rbutton:hover{
     background-color: rgb(233, 233, 233);
 }
 
-#rename:active{
-    background-color: rgb(212, 212, 212);
-}
-
-#delete:hover{
+.rbutton:active{
     background-color: rgb(233, 233, 233);
-}
-
-#delete:active{
-    background-color: rgb(212, 212, 212);
-}
-
-
-
-#rename2:hover{
-    background-color: rgb(233, 233, 233);
-}
-
-#rename2:active{
-    background-color: rgb(212, 212, 212);
-}
-
-#delete2:hover{
-    background-color: rgb(233, 233, 233);
-}
-
-#delete2:active{
-    background-color: rgb(212, 212, 212);
 }

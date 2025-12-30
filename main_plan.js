@@ -4,6 +4,7 @@
 
 let lastMouse;
 let planLayers;
+let planRoadLayers;
 let planviewCount;
 
 let GPSFlag = false;
@@ -16,17 +17,15 @@ let hoveredFeaturekind = 0;
 let hoverindex = -1;
 
 let roadcount = 0;
-
-
+let roadLayers;
+let roadfeatures;
 
 let PipeLayers;
 let PipeFeatures;
 let PipevectorSource;
 let TextFeatures;
 
-
 let nameflag = true;
-
 
 const loadingModal = document.getElementById('loadingModal');
 let center_lat = 0;
@@ -34,11 +33,13 @@ let center_lon = 0;
 let opacity = 1.0;
 
 
+let center_lats;
+let center_lons;
+
 let color_marker = '#ff0000ff';
 let color_marker_outline = '#ffffffff';
 
 let markerkind = 0;
-
 
 let mapkindflag = 1; // 1 == Vworld ,2  == OpenStreetMap
 let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
@@ -47,10 +48,14 @@ let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
 let rightmouseFeature = null;
 const menu = document.getElementById('context-menu');
 const menu2 = document.getElementById('context-menu2');
-const menu3 = document.getElementById('addressBox');
+const menu3 = document.getElementById('context-menu3');
+const addressBox = document.getElementById('addressBox');
 const addressBox_close = document.getElementById('addressBox_close');
 const addressBoxText = document.getElementById('addressBoxText');
 
+const DistanceBox = document.getElementById('DistanceBox');
+const DistanceBox_close = document.getElementById('DistanceBox_close');
+const DistanceBoxText = document.getElementById('DistanceBoxText');
 
 const PipelineStyle = new ol.style.Style({
     // 외곽선 (하얀색, 두껍게)
@@ -76,11 +81,6 @@ const PipeblueInnerLine = new ol.style.Style({
     zIndex:11
     })
 });
-
-
-
-
-
 
 function NoTextMarkerStyle1() {
     return new ol.style.Style({
@@ -430,6 +430,20 @@ controls: [
   ]
 });
 
+
+    // Overlay 생성
+const popupOverlay = new ol.Overlay({
+    element: DistanceBox,
+    positioning: 'bottom-center',
+    stopEvent: false,
+    offset: [0, -10]
+});
+
+map.addOverlay(popupOverlay);
+
+popupOverlay.setPosition(undefined);
+
+
 const markerimg = new ol.style.Icon({
     anchor: [0.5, 1], // 이미지 앵커 위치
     src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // 마커 이미지 URL
@@ -442,16 +456,24 @@ export function setroadcount(count) {
     markerPointLayers = new Array(roadcount);
     markerPointFeatures = new Array(roadcount);
 
+    roadLayers = new Array(roadcount);
+    roadfeatures = new Array(roadcount);
 
     PipeLayers = new Array(roadcount);
     PipeFeatures = new Array(roadcount);
     PipevectorSource = new Array(roadcount);
     TextFeatures = new Array(roadcount);
 
+    center_lats = new Array(roadcount);
+    center_lons = new Array(roadcount);
+
     for(let i = 0;i < roadcount;i++)
     {
         markerPointLayers[i] = [];
         markerPointFeatures[i] = [];
+        
+        center_lats[i] = -1;
+        center_lons[i] = -1;
 
         PipeLayers[i] = [];
         PipeFeatures[i] = [];
@@ -459,10 +481,6 @@ export function setroadcount(count) {
         TextFeatures[i] = [];
     }
 }
-
-
-
-
 
 let selectpipeindex1 = -1;
 let selectpipeindex2 = -1;
@@ -629,32 +647,39 @@ map.on('pointermove', function (evt) {
 
 });
 
+
 map.on('singleclick', function (evt) {
 
-    if(!GPSFlag)
-    {
-        map.forEachFeatureAtPixel(evt.pixel, function (feature) {
-            if (feature.get('noMouse')) {
-            return false; // 👉 이 피처는 무시
-            }
+    map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+        if (feature.get('noMouse')) {
+        return false; // 👉 이 피처는 무시
+        }
 
-            if (feature.get('type') == 1) // 측선
-            {
-                //sendMessageToCSharp(feature.get('name'));
-            }
-            else if (feature.get('type') == 2) // 마커
-            {
+        if (feature.get('type') == 1) // 측선
+        {
+            sendMessageToCSharp(feature.get('name'));
+        }
+        else if (feature.get('type') == 2) // 마커
+        {
+            let tt = feature.get('line');
+            sendMessageToCSharp( 'marker_'+tt);
+        }
+        else if (feature.get('type') == 3) // 관로
+        {
+            let tt = feature.get('line');
+            sendMessageToCSharp('pipe_'+tt);
+        }
+        else if (feature.get('type') == 10) // 측선
+        {
+            let tt = feature.get('line');
+            sendMessageToCSharp('pipe_'+tt);
+        }
 
-            }
-            else if (feature.get('type') == 3) // 관로
-            {
-                
-            }
+        menu3.style.display = 'none';
 
-            // 반환값 true는 반복 중단 (원하는 로직에 따라 조절)
-            return true;
-        });
-    }
+        // 반환값 true는 반복 중단 (원하는 로직에 따라 조절)
+        return true;
+    });
 });
 
 
@@ -671,9 +696,42 @@ export function moveview(lat,log) {
     SetViewCenter();
 }
 
+// homeButton.addEventListener('click', function(e) {
+//     SetViewCenter();
+// });
+
+
 homeButton.addEventListener('click', function(e) {
+
+    center_lat = 0;
+    center_lon = 0;
+    let count = 0;
+
+    for(let i = 0 ; i < center_lats.length;i++)
+    {
+        if(center_lats[i] != -1)
+        {
+            center_lat += center_lats[i];
+            center_lon += center_lons[i];
+            count += 1.0;
+
+            console.log(center_lats[i] + " / " + center_lons[i])
+        }
+    }
+
+    if(count == 0)
+    {
+        return;
+    }
+
+    center_lat /= count;
+    center_lon /= count;
+
+    console.log(center_lat + " / " + center_lon)
+
     SetViewCenter();
 });
+
 
 
 nameButton.addEventListener('click', function(e) {
@@ -799,7 +857,7 @@ function SetViewCenter()
 {
     const center = ol.proj.transform([center_lon,center_lat], 'EPSG:4326','EPSG:3857');
     map.getView().setCenter(center); // 지도 시점 변경
-    map.getView().setZoom(18); // 줌 레벨 설
+    //map.getView().setZoom(18); // 줌 레벨 설
 }
 
 
@@ -811,6 +869,24 @@ export function Removeplanview(index)
         map.removeLayer(planLayers[index][i]);
     }
     planLayers[index].length = 0;
+
+    // for(let i = 0 ; i < planRoadLayers[index].length;i++)
+    // {
+    //     map.removeLayer(planRoadLayers[index][i]);
+    // }
+    // planRoadLayers[index].length = 0;
+
+}
+
+
+export function Removeplanview_road(index)
+{
+    index = index*1;
+    for(let i = 0 ; i < planRoadLayers[index].length;i++)
+    {
+        map.removeLayer(planRoadLayers[index][i]);
+    }
+    planRoadLayers[index].length = 0;
 
 }
 
@@ -836,7 +912,7 @@ export function addplanview(image,minLat,minLon,maxLat,maxLon,index) {
             projection : "EPSG:3857",
         }),
         opacity:opacity,
-        zIndex:0
+        zIndex:9
     });
 
     planLayers[index].push(imageLayer);
@@ -849,6 +925,47 @@ export function addplanview(image,minLat,minLon,maxLat,maxLon,index) {
         }
     }
 }
+
+
+export function addplanview_road(image,minLat,minLon,maxLat,maxLon,index) {
+
+    const base64Image = image;
+    minLat = minLat*1.0;
+    minLon = minLon*1.0;
+    maxLat = maxLat*1.0;
+    maxLon = maxLon*1.0;
+
+    index = index*1;
+
+    const min = new ol.proj.transform([minLon,minLat], 'EPSG:4326','EPSG:3857');
+    const max = new ol.proj.transform([maxLon,maxLat], 'EPSG:4326','EPSG:3857');
+    const imageExtent2 = [min[0],min[1],max[0],max[1]];
+
+    const imageLayer = new ol.layer.Image({ //png파일, jpeg파일 
+        source : new ol.source.ImageStatic({
+            url : `data:image/png;base64,${base64Image}`, 
+            imageExtent: imageExtent2,
+            projection : "EPSG:3857",
+        }),
+        opacity:opacity,
+        zIndex:0
+    });
+
+    planRoadLayers[index].push(imageLayer);
+
+
+
+
+    /*
+    if(planRoadLayers[index].length == planviewCount[index])
+    {
+        for(let i = 0 ; i < planRoadLayers[index].length;i++)
+        {
+            map.addLayer(planRoadLayers[index][i]);
+        }
+    }*/
+}
+
 
 
 export function addplanview_ani(image,minLat,minLon,maxLat,maxLon,index) {
@@ -895,17 +1012,20 @@ export function setplanviewCount(count, count2) {
 
     planviewCount = new Array(vv);
     planLayers = new Array(vv);
+    planRoadLayers = new Array(vv);
 
     for(let i = 0 ; i < vv;i++)
     {
         planviewCount[i] = count2[i]*1;
         planLayers[i] = [];
+        planRoadLayers[i] = [];
     }
 }
 
 
 
 export function clearplanview() {
+
     for(let i = 0 ; i < planLayers.length;i++)
     {
         for(let j = 0 ; j < planLayers[i].length;j++)
@@ -913,6 +1033,17 @@ export function clearplanview() {
             map.removeLayer(planLayers[i][j]);
         }
         planLayers[i].length = 0;
+    }
+}
+
+export function clearplanview_road() {
+
+    for(let i = 0 ; i < planRoadLayers.length;i++)
+    {
+        for(let j = 0 ; j < planRoadLayers[i].length;j++)
+        {
+            map.removeLayer(planRoadLayers[i][j]);
+        }
     }
 }
 
@@ -933,9 +1064,9 @@ export function SetOpacity(value) {
 
 
 
-function sendMessageToCSharp() {
+function sendMessageToCSharp(value) {
     // C#으로 메시지 전송
-    window.chrome.webview.postMessage('Hello from JavaScript!');
+     window.chrome.webview.postMessage(value);
 }
 
 
@@ -1012,7 +1143,6 @@ export function setmarker2(index,lats,logs,names,kind,color,color2) {
     color_marker = color;
     color_marker_outline = color2;
 
-
     for(let i = 0 ; i < markerPointLayers[index].length;i++)
     {
         map.removeLayer(markerPointLayers[index][i]);
@@ -1035,6 +1165,8 @@ export function setmarker2(index,lats,logs,names,kind,color,color2) {
 
         pointFeature.set('noMouse', false);
         pointFeature.set('type', 2);
+        pointFeature.set('line', index);
+        pointFeature.set('name', temp[i]);
 
         if(nameflag)
         {
@@ -1225,9 +1357,37 @@ const toggle = document.getElementById('viewToggle');
     });
 });
 
+
+
+export function roadviewon(index) {
+
+    index = index*1;
+
+    for(let i = 0 ; i < planRoadLayers[index].length;i++)
+    {
+        map.addLayer(planRoadLayers[index][i]);
+    }
+    
+}
+
+
+export function roadviewoff(index) {
+
+    index = index*1;
+
+    for(let i = 0 ; i < planRoadLayers[index].length;i++)
+    {
+        map.removeLayer(planRoadLayers[index][i]);
+    }
+    
+}
+
+
 window.moveview = moveview;
 window.addplanview = addplanview;
+window.addplanview_road = addplanview_road;
 window.clearplanview = clearplanview;
+window.clearplanview_road = clearplanview_road;
 window.setplanviewCount = setplanviewCount;
 window.SetOpacity = SetOpacity;
 window.Removeplanview = Removeplanview;
@@ -1238,6 +1398,9 @@ window.setmarker2 = setmarker2;
 window.checkmarker = checkmarker;
 window.removemarker = removemarker;
 window.setroadcount = setroadcount;
+
+window.roadviewon = roadviewon;
+window.roadviewoff = roadviewoff;
 
 
 
@@ -1291,6 +1454,7 @@ export function addpipe(index,lats,logs,name) {
     lineFeature.set('noMouse', false);
     lineFeature.set('type', 3);
     lineFeature.set('name', name);
+    lineFeature.set('line', index);
 
     PipeFeatures[index].push(lineFeature);
 
@@ -1436,3 +1600,307 @@ export function setmapkind2(flag) {
 
 window.setmapkind = setmapkind;
 window.setmapkind2 = setmapkind2;
+
+
+
+
+
+
+
+let last_lat = 0;
+let last_log = 0;
+
+
+// 1) 우클릭 이벤트
+map.getViewport().addEventListener('contextmenu', function(e) {
+  e.preventDefault(); // 브라우저 기본 메뉴 막기
+    lastMouse = e;
+  // 지도 좌표
+  const pixel = map.getEventPixel(e);
+  const feature = map.forEachFeatureAtPixel(pixel, f => f);
+
+    map.getTargetElement().style.cursor = feature ? 'pointer' : '';
+
+  if (feature) {
+        if (feature.get('noMouse')) {
+        return false; // 👉 이 피처는 무시
+        }
+
+        if (feature.get('type') == 1) // 측선
+        {
+            // menu.style.left = e.pageX + 'px';
+            // menu.style.top = e.pageY + 'px';
+            // menu.style.display = 'block';
+        }
+        else if (feature.get('type') == 2) // 마커
+        {
+            rightmouseFeature = feature;
+            menu.style.left = e.pageX + 'px';
+            menu.style.top = e.pageY + 'px';
+            menu.style.display = 'block';
+        }
+        else if (feature.get('type') == 3) // 관로
+        {
+            rightmouseFeature = feature;
+            menu2.style.left = e.pageX + 'px';
+            menu2.style.top = e.pageY + 'px';
+            menu2.style.display = 'block';
+        }
+        else if (feature.get('type') == 10) // 측선
+        {
+            rightmouseFeature = feature;
+            menu3.style.left = e.pageX + 'px';
+            menu3.style.top = e.pageY + 'px';
+            menu3.style.display = 'block';
+            console.log("asd");
+
+            const coord = map.getCoordinateFromPixel(pixel);
+            const point = ol.proj.transform([coord[0],coord[1]], 'EPSG:3857','EPSG:4326');
+            last_lat = point[1];
+            last_log = point[0];
+
+        }
+    } else {
+        menu.style.display = 'none';
+        menu2.style.display = 'none';
+        menu3.style.display = 'none';
+
+        const coord = map.getCoordinateFromPixel(pixel);
+        const point = ol.proj.transform([coord[0],coord[1]], 'EPSG:3857','EPSG:4326');
+
+        console.log(point)
+
+        // 위도, 경도
+        var lat = point[1];
+        var lng = point[0];
+
+        sendMessageToCSharp('address_' + lat + "_" + lng);
+    }
+});
+
+
+export function SetAddress(address) {
+    console.log('SetAddress');
+    addressBoxText.innerText = address;
+    // menu3.innerText = address;
+    addressBox.style.left = (lastMouse.pageX - 80) + 'px';
+    addressBox.style.top = (lastMouse.pageY - 40) + 'px';
+    addressBox.style.display = 'block';
+}
+
+export function SetDistance(address,lat,log) {
+
+    const lat1 = lat*1.0;
+    const log1 = log*1.0;
+    DistanceBox.style.display = 'block';
+    const position = ol.proj.fromLonLat([lat1,log1]);
+    popupOverlay.setPosition(position);
+    DistanceBoxText.innerText = address+"m";
+}
+
+
+
+window.SetAddress = SetAddress;
+window.SetDistance = SetDistance;
+
+
+addressBox_close.addEventListener('click', () => {
+    addressBox.style.display = 'none';
+});
+
+
+DistanceBox_close.addEventListener('click', () => {
+    popupOverlay.setPosition(undefined);
+    //DistanceBox.style.display = 'none';
+});
+
+
+
+// 이름 변경
+document.getElementById('rename').addEventListener('click', () => {
+    if (rightmouseFeature) {
+    let index = rightmouseFeature.get('line');
+    let name = rightmouseFeature.get('name');
+    sendMessageToCSharp('mrename_' + index + "_" + name);
+    }
+    menu.style.display = 'none';
+});
+
+// 삭제
+document.getElementById('delete').addEventListener('click', () => {
+    if (rightmouseFeature) {
+    let index = rightmouseFeature.get('line');
+    let name = rightmouseFeature.get('name');
+    sendMessageToCSharp('mdelete_' + index + "_" + name);
+    }
+    menu.style.display = 'none';
+});
+
+
+// 관로이름 변경
+document.getElementById('rename2').addEventListener('click', () => {
+    if (rightmouseFeature) {
+    let index = rightmouseFeature.get('line');
+    let name = rightmouseFeature.get('name');
+    sendMessageToCSharp('prename_' + index + "_" + name);
+    }
+    menu2.style.display = 'none';
+});
+
+// 관로삭제
+document.getElementById('delete2').addEventListener('click', () => {
+    if (rightmouseFeature) {
+    let index = rightmouseFeature.get('line');
+    let name = rightmouseFeature.get('name');
+    sendMessageToCSharp('pdelete_' + index + "_" + name);
+    }
+    menu2.style.display = 'none';
+});
+
+// 지도 클릭 시 메뉴 숨기기
+map.on('click', () => {
+    menu.style.display = 'none';
+    menu2.style.display = 'none';
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export function setroads(index,lat,log,name) {
+
+    const defaultStyle2 = new ol.style.Style({
+        fill: new ol.style.Fill({ color: '#00000000' }),
+        zIndex : 10
+    });
+
+    const ind = index*1;
+
+    if(roadLayers[ind] != null)
+    {
+        map.removeLayer(roadLayers[ind]);
+    }
+
+    const lats = [];
+    const logs = [];
+
+    for(let i = 0 ; i < lat.length;i++)
+    {
+        const lat2 = lat[i]*1.0;
+        const log2 = log[i]*1.0;
+        lats.push(lat2);
+        logs.push(log2);
+    }
+
+    const coords = lats.map((lat, i) => [logs[i], lat]);
+    const transformedCoords = coords.map(coord => ol.proj.fromLonLat(coord));
+    const polygonGeometry = new ol.geom.Polygon([transformedCoords]);
+
+
+    const polygonFeature = new ol.Feature({
+        geometry: polygonGeometry,
+        name: name,
+    });
+
+    polygonFeature.setStyle(defaultStyle2);
+    polygonFeature.set('noMouse', false);
+    polygonFeature.set('line', index);
+    polygonFeature.set('type', 10);
+
+    const vectorSource = new ol.source.Vector({
+        features: [polygonFeature]
+    });
+
+    const vectorLayer = new ol.layer.Vector({
+        source: vectorSource
+    });
+
+    let ii = Math.round(coords.length/4);
+
+    // console.log(coords[ii][0]);
+    
+    center_lats[ind] = coords[ii][1];
+    center_lons[ind] = coords[ii][0];
+
+    roadfeatures[ind] = polygonFeature;
+    roadLayers[ind] = vectorLayer;
+    console.log("setroads2 : " + index);
+}
+
+
+
+export function checkroad(index,flag) {
+    const ind = index*1;
+
+    if(flag == 0)
+    {
+        map.removeLayer(roadLayers[ind]);
+    }
+    else
+    {
+        map.addLayer(roadLayers[ind]);
+    }
+}
+
+
+
+export function selectroad(index) {
+
+    index = index*1;
+
+    if(center_lats[index] != -1)
+    {
+        const center = ol.proj.transform([center_lons[index],center_lats[index]], 'EPSG:4326','EPSG:3857');
+        map.getView().setCenter(center); // 지도 시점 변경
+    }
+}
+
+
+
+
+window.checkroad = checkroad;
+window.setroads = setroads;
+window.selectroad = selectroad;
+
+
+document.getElementById('create_marker').addEventListener('click', () => {
+
+    if (rightmouseFeature) {
+        let index = rightmouseFeature.get('line');
+        //let name = rightmouseFeature.get('name');
+        sendMessageToCSharp('createmarker_' + index + "_" + last_lat + "_" + last_log);
+    }
+
+    menu3.style.display = 'none';
+});
+
+document.getElementById('check_dist').addEventListener('click', () => {
+
+    if (rightmouseFeature) {
+        let index = rightmouseFeature.get('line');
+        sendMessageToCSharp('checkdist_' + index + "_" + last_lat + "_" + last_log);
+    }
+
+    menu3.style.display = 'none';
+});
+
+

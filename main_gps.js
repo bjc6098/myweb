@@ -48,9 +48,15 @@ let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
 let rightmouseFeature = null;
 const menu = document.getElementById('context-menu');
 const menu2 = document.getElementById('context-menu2');
-const menu3 = document.getElementById('addressBox');
+const menu3 = document.getElementById('context-menu3');
+
+const addressBox = document.getElementById('addressBox');
 const addressBox_close = document.getElementById('addressBox_close');
 const addressBoxText = document.getElementById('addressBoxText');
+
+const DistanceBox = document.getElementById('DistanceBox');
+const DistanceBox_close = document.getElementById('DistanceBox_close');
+const DistanceBoxText = document.getElementById('DistanceBoxText');
 
 
 function NoTextMarkerStyle1() {
@@ -428,6 +434,20 @@ controls: [
     })
   ]
 });
+
+
+
+    // Overlay 생성
+const popupOverlay = new ol.Overlay({
+    element: DistanceBox,
+    positioning: 'bottom-center',
+    stopEvent: false,
+    offset: [0, -10]
+});
+
+map.addOverlay(popupOverlay);
+
+popupOverlay.setPosition(undefined);
 
 const markerimg = new ol.style.Icon({
     anchor: [0.5, 1], // 이미지 앵커 위치
@@ -864,7 +884,7 @@ map.on('singleclick', function (evt) {
                 sendMessageToCSharp('pipe_'+tt);
             }
 
-            menu3.style.display = 'none';
+            addressBox.style.display = 'none';
 
             // 반환값 true는 반복 중단 (원하는 로직에 따라 조절)
             return true;
@@ -931,6 +951,7 @@ export function setroads(index,lat,log,color,color2,color3,name) {
 
     polygonFeature.setStyle(defaultStyle);
     polygonFeature.set('noMouse', false);
+    polygonFeature.set('line', index);
     polygonFeature.set('type', 1);
 
     const vectorSource = new ol.source.Vector({
@@ -1761,6 +1782,10 @@ const toggle = document.getElementById('viewToggle');
 
 
 
+let last_lat = 0;
+let last_log = 0;
+
+
 // 1) 우클릭 이벤트
 map.getViewport().addEventListener('contextmenu', function(e) {
   e.preventDefault(); // 브라우저 기본 메뉴 막기
@@ -1776,11 +1801,18 @@ map.getViewport().addEventListener('contextmenu', function(e) {
       return false; // 👉 이 피처는 무시
     }
 
+    console.log( "Asdsad : " + feature.get('type'))
     if (feature.get('type') == 1) // 측선
     {
-        // menu.style.left = e.pageX + 'px';
-        // menu.style.top = e.pageY + 'px';
-        // menu.style.display = 'block';
+        rightmouseFeature = feature;
+        menu3.style.left = e.pageX + 'px';
+        menu3.style.top = e.pageY + 'px';
+        menu3.style.display = 'block';
+
+        const coord = map.getCoordinateFromPixel(pixel);
+        const point = ol.proj.transform([coord[0],coord[1]], 'EPSG:3857','EPSG:4326');
+        last_lat = point[1];
+        last_log = point[0];
     }
     else if (feature.get('type') == 2) // 마커
     {
@@ -1799,6 +1831,7 @@ map.getViewport().addEventListener('contextmenu', function(e) {
   } else {
     menu.style.display = 'none';
     menu2.style.display = 'none';
+    menu3.style.display = 'none';
 
     const coord = map.getCoordinateFromPixel(pixel);
     const point = ol.proj.transform([coord[0],coord[1]], 'EPSG:3857','EPSG:4326');
@@ -1817,16 +1850,15 @@ map.getViewport().addEventListener('contextmenu', function(e) {
 export function SetAddress(address) {
     console.log('SetAddress');
     addressBoxText.innerText = address;
-    // menu3.innerText = address;
-    menu3.style.left = (lastMouse.pageX - 80) + 'px';
-    menu3.style.top = (lastMouse.pageY - 40) + 'px';
-    menu3.style.display = 'block';
+    addressBox.style.left = (lastMouse.pageX - 80) + 'px';
+    addressBox.style.top = (lastMouse.pageY - 40) + 'px';
+    addressBox.style.display = 'block';
 }
 
 
 
 addressBox_close.addEventListener('click', () => {
-    menu3.style.display = 'none';
+    addressBox.style.display = 'none';
 });
 
 
@@ -1875,6 +1907,7 @@ document.getElementById('delete2').addEventListener('click', () => {
 map.on('click', () => {
     menu.style.display = 'none';
     menu2.style.display = 'none';
+    menu3.style.display = 'none';
 });
 
 
@@ -1969,3 +2002,37 @@ window.StartGPSEditMode = StartGPSEditMode;
 window.setmapkind = setmapkind;
 window.setmapkind2 = setmapkind2;
 window.SetAddress = SetAddress;
+
+
+
+document.getElementById('check_dist').addEventListener('click', () => {
+
+    if (rightmouseFeature) {
+        let index = rightmouseFeature.get('line');
+        sendMessageToCSharp('checkdist_' + index + "_" + last_lat + "_" + last_log);
+    }
+
+    menu3.style.display = 'none';
+});
+
+
+
+export function SetDistance(address,lat,log) {
+
+    const lat1 = lat*1.0;
+    const log1 = log*1.0;
+    DistanceBox.style.display = 'block';
+    const position = ol.proj.fromLonLat([lat1,log1]);
+    popupOverlay.setPosition(position);
+    DistanceBoxText.innerText = address+"m";
+}
+
+
+DistanceBox_close.addEventListener('click', () => {
+    popupOverlay.setPosition(undefined);
+});
+
+
+
+window.SetDistance = SetDistance;
+

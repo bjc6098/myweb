@@ -69,6 +69,78 @@
 <div style="position: absolute;right: 10px;top: 50px;font-size:14px;color:black;font-weight:600">심도 : <span id="depthtext">0.00m</span></div>
 
 
+
+
+  
+  <ul id="context-menu" style="
+    position: absolute;
+    display: none;
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+">
+  <li id="rename" class="rbutton" style="padding: 5px 20px; cursor: pointer;">마커 이름 변경</li>
+  <li id="delete" class="rbutton" style="padding: 5px 20px; cursor: pointer;">마커 삭제</li>
+</ul>
+
+
+<ul id="context-menu2" style="
+    position: absolute;
+    display: none;
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+">
+  <li id="rename2" class="rbutton" style="padding: 5px 20px; cursor: pointer;">관로 이름 변경</li>
+  <li id="delete2" class="rbutton" style="padding: 5px 20px; cursor: pointer;">관로 삭제</li>
+</ul>
+
+
+
+<ul id="context-menu3" style="
+    position: absolute;
+    display: none;
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+">
+  <li id="create_marker" class="rbutton" style="padding: 5px 20px; cursor: pointer;">마커 생성</li>
+  <li id="check_dist" class="rbutton" style="padding: 5px 20px; cursor: pointer;">측선 거리 조회</li>
+</ul>
+
+
+
+  <div id="addressBox" style="position: absolute;background-color: #ffffff;border: 1px solid #000000;padding:5px;display: none;z-index: 1000;">
+    <span id="addressBoxText" style="padding:8px">
+    </span>
+    <img id="addressBox_close" style="position: absolute;cursor: pointer;width: 10px;height: 10px;top: 1px;right: 1px;" src="image/Cancel Bold.png">
+  </div>
+
+
+  <div id="DistanceBox" style="position: absolute;background-color: #ffffff;border: 1px solid #000000;padding:5px;display: none;z-index: 1000;">
+    <span id="DistanceBoxText" style="padding:8px">
+    </span>
+    <img id="DistanceBox_close" style="position: absolute;cursor: pointer;width: 10px;height: 10px;top: 1px;right: 1px;" src="image/Cancel Bold.png">
+  </div>
+
+
+
+
+
+
+
     
   </body>
 </html>
