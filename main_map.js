@@ -42,6 +42,9 @@ let mapkindflag = 1; // 1 == Vworld ,2  == OpenStreetMap
 let mapkindflag2 = 2; // 1 == 일반지도 ,2  == 위성지도
 
 
+let all_radius = 5;
+
+
 
 function createPipetextStyle(feature) {
     return new ol.style.Style({
@@ -87,22 +90,24 @@ const PipeblueInnerLine = new ol.style.Style({
 
 
 
+// 원 모양 텍스트x
 function NoTextMarkerStyle1() {
     return new ol.style.Style({
     image: new ol.style.Circle({
-    radius: 5, // 원 크기
+    radius: all_radius, // 원 크기
         fill: new ol.style.Fill({ color: color_marker }),
     stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 }) // 테두리 흰색
     })
     });
 }
 
+// 삼각형 모양 텍스트x
 function NoTextMarkerStyle2() {
     return new ol.style.Style({
     image: new ol.style.RegularShape({
-    radius: 5, // 원 크기
+    radius: all_radius, // 원 크기
         points: 4,             // 4개 → 사각형
-        radius: 7,
+        radius: all_radius+2,
         angle: Math.PI / 4,    // 회전 보정 (정사각형으로 보이게)
         fill: new ol.style.Fill({ color:color_marker}),
         stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
@@ -110,24 +115,26 @@ function NoTextMarkerStyle2() {
     });
 }
 
+// 사각형 모양 텍스트x
 function NoTextMarkerStyle3() {
     return new ol.style.Style({
     image: new ol.style.RegularShape({
-    radius: 5, // 원 크기
+    radius: all_radius, // 원 크기
         points: 3,            
-        radius: 7,
+        radius: all_radius+2,
         fill: new ol.style.Fill({ color:color_marker}),
         stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
     })
     });
 }
 
+// 별 모양 텍스트x
 function NoTextMarkerStyle4() {
     return new ol.style.Style({
     image: new ol.style.RegularShape({
         points: 5,             // 별의 꼭짓점 수
-        radius: 8,            // 바깥쪽 반지름
-        radius2: 4,           // 안쪽 반지름
+        radius: all_radius*2,            // 바깥쪽 반지름
+        radius2: all_radius,           // 안쪽 반지름
         angle: 0,
         fill: new ol.style.Fill({ color: color_marker }),
         stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
@@ -135,10 +142,11 @@ function NoTextMarkerStyle4() {
     });
 }
 
+// 원 모양 일반
 function TextMarkerStyle1(feature) {
     return new ol.style.Style({
     image: new ol.style.Circle({
-    radius: 5, // 원 크기
+    radius: all_radius, // 원 크기
         fill: new ol.style.Fill({ color: color_marker }),
     stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 }) // 테두리 흰색
     }),
@@ -155,12 +163,13 @@ function TextMarkerStyle1(feature) {
     });
 }
 
+// 삼각형 모양 일반
 function TextMarkerStyle2(feature) {
     return new ol.style.Style({
     image: new ol.style.RegularShape({
-    radius: 5, // 원 크기
+    radius: all_radius, // 원 크기
         points: 4,             // 4개 → 사각형
-        radius: 7,
+        radius: all_radius+2,
         angle: Math.PI / 4,    // 회전 보정 (정사각형으로 보이게)
         fill: new ol.style.Fill({ color:color_marker}),
         stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
@@ -178,12 +187,13 @@ function TextMarkerStyle2(feature) {
     });
 }
 
+// 사각형 모양 일반
 function TextMarkerStyle3(feature) {
     return new ol.style.Style({
     image: new ol.style.RegularShape({
-    radius: 5, // 원 크기
+    radius: all_radius, // 원 크기
         points: 3,             // 4개 → 사각형
-        radius: 7,
+        radius: all_radius+2,
         fill: new ol.style.Fill({ color:color_marker}),
         stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
     }),
@@ -200,12 +210,13 @@ function TextMarkerStyle3(feature) {
     });
 }
 
+// 별 모양 일반
 function TextMarkerStyle4(feature) {
     return new ol.style.Style({
     image: new ol.style.RegularShape({
         points: 5,             // 별의 꼭짓점 수
-        radius: 8,            // 바깥쪽 반지름
-        radius2: 4,           // 안쪽 반지름
+        radius: all_radius*2,            // 바깥쪽 반지름
+        radius2: all_radius,           // 안쪽 반지름
         angle: 0,
         fill: new ol.style.Fill({ color: color_marker }),
         stroke: new ol.style.Stroke({ color: color_marker_outline, width: 1 })
@@ -223,10 +234,11 @@ function TextMarkerStyle4(feature) {
     });
 }
 
+// 일반 원 모양 호버
 function TextMarkerHoverStyle1(feature) {
     return new ol.style.Style({
         image: new ol.style.Circle({
-        radius: 5, // 원 크기
+        radius: all_radius, // 원 크기
         fill: new ol.style.Fill({ color: 'rgba(0, 0, 255, 1)' }),
         stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
     }),
@@ -243,12 +255,13 @@ function TextMarkerHoverStyle1(feature) {
     });
 }
 
+// 삼각형 모양 호버
 function TextMarkerHoverStyle2(feature) {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
-        radius: 5, // 원 크기
+        radius: all_radius, // 원 크기
             points: 4,             // 4개 → 사각형
-            radius: 7,
+            radius: all_radius+2,
             angle: Math.PI / 4,    // 회전 보정 (정사각형으로 보이게)
             fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
             stroke: new ol.style.Stroke({ color: 'white', width: 1 })
@@ -266,12 +279,13 @@ function TextMarkerHoverStyle2(feature) {
     });
 }
 
+// 사각형 모양 호버
 function TextMarkerHoverStyle3(feature) {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
         radius: 5, // 원 크기
             points: 3,             // 4개 → 사각형
-            radius: 7,
+            radius: all_radius+2,
             fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
             stroke: new ol.style.Stroke({ color: 'white', width: 1 })
         }),
@@ -288,12 +302,13 @@ function TextMarkerHoverStyle3(feature) {
     });
 }
 
+// 별 모양 호버
 function TextMarkerHoverStyle4(feature) {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
             points: 5,             // 별의 꼭짓점 수
-            radius: 8,            // 바깥쪽 반지름
-            radius2: 4,           // 안쪽 반지름
+            radius: all_radius*2,            // 바깥쪽 반지름
+            radius2: all_radius,           // 안쪽 반지름
             angle: 0,
             fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
             stroke: new ol.style.Stroke({ color: 'white', width: 1 })
@@ -311,22 +326,25 @@ function TextMarkerHoverStyle4(feature) {
     });
 }
 
+
+// 별 모양 텍스트x 호버
 function NoTextMarkerHoverStyle1() {
     return new ol.style.Style({
         image: new ol.style.Circle({
-        radius: 5, // 원 크기
+        radius: all_radius, // 원 크기
         fill: new ol.style.Fill({ color: 'rgba(0, 0, 255, 1)' }),
         stroke: new ol.style.Stroke({ color: 'white', width: 1 }) // 테두리 흰색
     })
     });
 }
 
+// 별 모양 텍스트x 호버
 function NoTextMarkerHoverStyle2() {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
-        radius: 5, // 원 크기
+        radius: all_radius, // 원 크기
             points: 4,             // 4개 → 사각형
-            radius: 7,
+            radius: all_radius+2,
             angle: Math.PI / 4,    // 회전 보정 (정사각형으로 보이게)
             fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
             stroke: new ol.style.Stroke({ color: 'white', width: 1 })
@@ -334,24 +352,27 @@ function NoTextMarkerHoverStyle2() {
     });
 }
 
+// 별 모양 텍스트x 호버
 function NoTextMarkerHoverStyle3() {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
-        radius: 5, // 원 크기
+        radius: all_radius, // 원 크기
             points: 3,             // 4개 → 사각형
-            radius: 7,
+            radius: all_radius+2,
             fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
             stroke: new ol.style.Stroke({ color: 'white', width: 1 })
         })
     });
 }
 
+
+// 별 모양 텍스트x 호버
 function NoTextMarkerHoverStyle4() {
     return new ol.style.Style({
         image: new ol.style.RegularShape({
             points: 5,             // 별의 꼭짓점 수
-            radius: 8,            // 바깥쪽 반지름
-            radius2: 4,           // 안쪽 반지름
+            radius: all_radius*2,            // 바깥쪽 반지름
+            radius2: all_radius,           // 안쪽 반지름
             angle: 0,
             fill: new ol.style.Fill({ color:'rgba(0, 0, 255, 1)'}),
             stroke: new ol.style.Stroke({ color: 'white', width: 1 })
@@ -1698,4 +1719,12 @@ addressBox_close.addEventListener('click', () => {
     menu3.style.display = 'none';
 });
 
+export function SetRadian(rad) {
+    const radd = rad*1.0;
+    all_radius = radd;
+    console.log('SetRadian');
+}
+
+
 window.SetAddress = SetAddress;
+window.SetRadian = SetRadian;
